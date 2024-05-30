@@ -1,0 +1,30 @@
+project:
+  #type: book
+  type: website
+  output-dir: docs
+
+toc: true
+toc-location: right
+number-sections: false
+#bibliography: assets/references.bib
+
+execute:
+  enabled: true
+
+
+website:
+  title: "nba"
+  navbar:
+    right:
+      - index.ipynb
+      - icon: github
+        href: https://github.com/
+      - icon: twitter
+        href: https://twitter.com
+format:
+  html:
+    #theme: cosmo
+    css: styles.css
+
+
+

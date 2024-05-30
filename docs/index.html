@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.551">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>nba</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-2.27.0.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">nba</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">NBA API Stats</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#nba-api-stats" id="toc-nba-api-stats" class="nav-link active" data-scroll-target="#nba-api-stats">NBA API Stats</a>
+  <ul class="collapse">
+  <li><a href="#getting-team-and-player-ids" id="toc-getting-team-and-player-ids" class="nav-link" data-scroll-target="#getting-team-and-player-ids">Getting Team and Player IDs</a></li>
+  <li><a href="#commonteamroster" id="toc-commonteamroster" class="nav-link" data-scroll-target="#commonteamroster">CommonTeamRoster</a>
+  <ul class="collapse">
+  <li><a href="#colleges" id="toc-colleges" class="nav-link" data-scroll-target="#colleges">Colleges</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+
+<link href="https://fonts.cdnfonts.com/css/pf-tempesta-seven" rel="stylesheet"> <link rel="stylesheet" href="https://use.typekit.net/bbp6pmz.css">
+
+<section id="nba-api-stats" class="level1">
+<h1>NBA API Stats</h1>
+<p>In the following, we want to forecast the future success of potential NBA players and their performance in the NBA draft, as well as ascertain which colleges tend to produce the most successful NBA players. We analyze and evaluate player and game statistics to ascertain patterns and trends that contribute to successful NBA transitions.</p>
+<div class="mycode">
+<p>We will primarily be using <code>nba_api.stats.endpoints</code> for each API endpoint supported by <a href="https://stats.nba.com/">stats.nba.com</a>. For example, we use API endpoints such as <code>commonplayerinfo</code>, <code>drafthistory</code></p>
+</div>
+<section id="getting-team-and-player-ids" class="level3">
+<h3 class="anchored" data-anchor-id="getting-team-and-player-ids">Getting Team and Player IDs</h3>
+<p>The package also includes utilities for fetching player and team information available under <code>nba_api.stats.static</code>.</p>
+<div id="cell-6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.static <span class="im">import</span> teams</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get_teams returns a list of 30 dictionaries, each an NBA team</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nba_teams <span class="op">=</span> teams.get_teams()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Number of teams fetched: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">len</span>(nba_teams)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of teams fetched: 30</code></pre>
+</div>
+</div>
+<div id="cell-7" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">full_name</th>
+<th data-quarto-table-cell-role="th">abbreviation</th>
+<th data-quarto-table-cell-role="th">nickname</th>
+<th data-quarto-table-cell-role="th">city</th>
+<th data-quarto-table-cell-role="th">state</th>
+<th data-quarto-table-cell-role="th">year_founded</th>
+<th data-quarto-table-cell-role="th">logo_url</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1610612737</td>
+<td>Atlanta Hawks</td>
+<td>ATL</td>
+<td>Hawks</td>
+<td>Atlanta</td>
+<td>Georgia</td>
+<td>1949</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1610612738</td>
+<td>Boston Celtics</td>
+<td>BOS</td>
+<td>Celtics</td>
+<td>Boston</td>
+<td>Massachusetts</td>
+<td>1946</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1610612739</td>
+<td>Cleveland Cavaliers</td>
+<td>CLE</td>
+<td>Cavaliers</td>
+<td>Cleveland</td>
+<td>Ohio</td>
+<td>1970</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1610612740</td>
+<td>New Orleans Pelicans</td>
+<td>NOP</td>
+<td>Pelicans</td>
+<td>New Orleans</td>
+<td>Louisiana</td>
+<td>2002</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1610612741</td>
+<td>Chicago Bulls</td>
+<td>CHI</td>
+<td>Bulls</td>
+<td>Chicago</td>
+<td>Illinois</td>
+<td>1966</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>1610612742</td>
+<td>Dallas Mavericks</td>
+<td>DAL</td>
+<td>Mavericks</td>
+<td>Dallas</td>
+<td>Texas</td>
+<td>1980</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>1610612743</td>
+<td>Denver Nuggets</td>
+<td>DEN</td>
+<td>Nuggets</td>
+<td>Denver</td>
+<td>Colorado</td>
+<td>1976</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>1610612744</td>
+<td>Golden State Warriors</td>
+<td>GSW</td>
+<td>Warriors</td>
+<td>Golden State</td>
+<td>California</td>
+<td>1946</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>1610612745</td>
+<td>Houston Rockets</td>
+<td>HOU</td>
+<td>Rockets</td>
+<td>Houston</td>
+<td>Texas</td>
+<td>1967</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>1610612746</td>
+<td>Los Angeles Clippers</td>
+<td>LAC</td>
+<td>Clippers</td>
+<td>Los Angeles</td>
+<td>California</td>
+<td>1970</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>1610612747</td>
+<td>Los Angeles Lakers</td>
+<td>LAL</td>
+<td>Lakers</td>
+<td>Los Angeles</td>
+<td>California</td>
+<td>1948</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>1610612748</td>
+<td>Miami Heat</td>
+<td>MIA</td>
+<td>Heat</td>
+<td>Miami</td>
+<td>Florida</td>
+<td>1988</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>1610612749</td>
+<td>Milwaukee Bucks</td>
+<td>MIL</td>
+<td>Bucks</td>
+<td>Milwaukee</td>
+<td>Wisconsin</td>
+<td>1968</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>1610612750</td>
+<td>Minnesota Timberwolves</td>
+<td>MIN</td>
+<td>Timberwolves</td>
+<td>Minnesota</td>
+<td>Minnesota</td>
+<td>1989</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>1610612751</td>
+<td>Brooklyn Nets</td>
+<td>BKN</td>
+<td>Nets</td>
+<td>Brooklyn</td>
+<td>New York</td>
+<td>1976</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>1610612752</td>
+<td>New York Knicks</td>
+<td>NYK</td>
+<td>Knicks</td>
+<td>New York</td>
+<td>New York</td>
+<td>1946</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>1610612753</td>
+<td>Orlando Magic</td>
+<td>ORL</td>
+<td>Magic</td>
+<td>Orlando</td>
+<td>Florida</td>
+<td>1989</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>1610612754</td>
+<td>Indiana Pacers</td>
+<td>IND</td>
+<td>Pacers</td>
+<td>Indiana</td>
+<td>Indiana</td>
+<td>1976</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>1610612755</td>
+<td>Philadelphia 76ers</td>
+<td>PHI</td>
+<td>76ers</td>
+<td>Philadelphia</td>
+<td>Pennsylvania</td>
+<td>1949</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>1610612756</td>
+<td>Phoenix Suns</td>
+<td>PHX</td>
+<td>Suns</td>
+<td>Phoenix</td>
+<td>Arizona</td>
+<td>1968</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>1610612757</td>
+<td>Portland Trail Blazers</td>
+<td>POR</td>
+<td>Trail Blazers</td>
+<td>Portland</td>
+<td>Oregon</td>
+<td>1970</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>1610612758</td>
+<td>Sacramento Kings</td>
+<td>SAC</td>
+<td>Kings</td>
+<td>Sacramento</td>
+<td>California</td>
+<td>1948</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>1610612759</td>
+<td>San Antonio Spurs</td>
+<td>SAS</td>
+<td>Spurs</td>
+<td>San Antonio</td>
+<td>Texas</td>
+<td>1976</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>1610612760</td>
+<td>Oklahoma City Thunder</td>
+<td>OKC</td>
+<td>Thunder</td>
+<td>Oklahoma City</td>
+<td>Oklahoma</td>
+<td>1967</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>1610612761</td>
+<td>Toronto Raptors</td>
+<td>TOR</td>
+<td>Raptors</td>
+<td>Toronto</td>
+<td>Ontario</td>
+<td>1995</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>1610612762</td>
+<td>Utah Jazz</td>
+<td>UTA</td>
+<td>Jazz</td>
+<td>Utah</td>
+<td>Utah</td>
+<td>1974</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>1610612763</td>
+<td>Memphis Grizzlies</td>
+<td>MEM</td>
+<td>Grizzlies</td>
+<td>Memphis</td>
+<td>Tennessee</td>
+<td>1995</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">27</td>
+<td>1610612764</td>
+<td>Washington Wizards</td>
+<td>WAS</td>
+<td>Wizards</td>
+<td>Washington</td>
+<td>District of Columbia</td>
+<td>1961</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">28</td>
+<td>1610612765</td>
+<td>Detroit Pistons</td>
+<td>DET</td>
+<td>Pistons</td>
+<td>Detroit</td>
+<td>Michigan</td>
+<td>1948</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29</td>
+<td>1610612766</td>
+<td>Charlotte Hornets</td>
+<td>CHA</td>
+<td>Hornets</td>
+<td>Charlotte</td>
+<td>North Carolina</td>
+<td>1988</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg" class="img-fluid" width="50"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<section id="get-all-nba-players" class="level4">
+<h4 class="anchored" data-anchor-id="get-all-nba-players">Get All NBA Players</h4>
+<div id="cell-9" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.static <span class="im">import</span> players</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get_players returns a list of dictionaries, each representing a player.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>nba_players <span class="op">=</span> players.get_players()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of players fetched: </span><span class="sc">{</span><span class="bu">len</span>(nba_players)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>nba_active_players <span class="op">=</span> players.get_active_players()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of active players fetched: </span><span class="sc">{</span><span class="bu">len</span>(nba_active_players)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of players fetched: 4900
+Number of active players fetched: 531</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="commonteamroster" class="level2">
+<h2 class="anchored" data-anchor-id="commonteamroster">CommonTeamRoster</h2>
+<div id="cell-11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.static <span class="im">import</span> teams</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.endpoints <span class="im">import</span> CommonTeamRoster</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get_teams returns a list of 30 dictionaries, each an NBA team</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>nba_teams <span class="op">=</span> teams.get_teams()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>all_nba_teams <span class="op">=</span> [team[<span class="st">"id"</span>] <span class="cf">for</span> team <span class="kw">in</span> nba_teams]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-12" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>script false</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List to hold data frames of all players info</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>all_players_info <span class="op">=</span> []</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each team ID and get the roster data</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> team_id <span class="kw">in</span> all_nba_teams:</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    common_team_roster <span class="op">=</span> CommonTeamRoster(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        team_id<span class="op">=</span>team_id,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        league_id_nullable<span class="op">=</span><span class="st">'00'</span>,  <span class="co"># NBA league ID</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        season<span class="op">=</span><span class="st">'2022-23'</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        timeout<span class="op">=</span><span class="dv">200</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    team_roster_df <span class="op">=</span> common_team_roster.get_data_frames()[<span class="dv">0</span>]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    all_players_info.append(team_roster_df)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate all individual team data frames into a single data frame</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>all_players_info_df <span class="op">=</span> pd.concat(all_players_info, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>all_players_info_df.to_csv(<span class="st">"data/nba_players.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Couldn't find program: 'false'</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="73">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">TeamID</th>
+<th data-quarto-table-cell-role="th">SEASON</th>
+<th data-quarto-table-cell-role="th">LeagueID</th>
+<th data-quarto-table-cell-role="th">PLAYER</th>
+<th data-quarto-table-cell-role="th">NICKNAME</th>
+<th data-quarto-table-cell-role="th">PLAYER_SLUG</th>
+<th data-quarto-table-cell-role="th">NUM</th>
+<th data-quarto-table-cell-role="th">POSITION</th>
+<th data-quarto-table-cell-role="th">HEIGHT</th>
+<th data-quarto-table-cell-role="th">WEIGHT</th>
+<th data-quarto-table-cell-role="th">BIRTH_DATE</th>
+<th data-quarto-table-cell-role="th">AGE</th>
+<th data-quarto-table-cell-role="th">EXP</th>
+<th data-quarto-table-cell-role="th">SCHOOL</th>
+<th data-quarto-table-cell-role="th">PLAYER_ID</th>
+<th data-quarto-table-cell-role="th">HOW_ACQUIRED</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1610612737</td>
+<td>2022</td>
+<td>0</td>
+<td>Donovan Williams</td>
+<td>Donovan</td>
+<td>donovan-williams</td>
+<td>NaN</td>
+<td>G</td>
+<td>6-6</td>
+<td>190</td>
+<td>SEP 06, 2001</td>
+<td>21.0</td>
+<td>R</td>
+<td>UNLV</td>
+<td>1631495</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1610612737</td>
+<td>2022</td>
+<td>0</td>
+<td>Bruno Fernando</td>
+<td>Bruno</td>
+<td>bruno-fernando</td>
+<td>0.0</td>
+<td>F-C</td>
+<td>6-10</td>
+<td>240</td>
+<td>AUG 15, 1998</td>
+<td>24.0</td>
+<td>3</td>
+<td>Maryland</td>
+<td>1628981</td>
+<td>Traded from HOU on 02/09/23</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1610612737</td>
+<td>2022</td>
+<td>0</td>
+<td>Jalen Johnson</td>
+<td>Jalen</td>
+<td>jalen-johnson</td>
+<td>1.0</td>
+<td>F</td>
+<td>6-8</td>
+<td>219</td>
+<td>DEC 18, 2001</td>
+<td>21.0</td>
+<td>1</td>
+<td>Duke</td>
+<td>1630552</td>
+<td>#20 Pick in 2021 Draft</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1610612737</td>
+<td>2022</td>
+<td>0</td>
+<td>Trent Forrest</td>
+<td>Trent</td>
+<td>trent-forrest</td>
+<td>2.0</td>
+<td>G</td>
+<td>6-4</td>
+<td>210</td>
+<td>JUN 12, 1998</td>
+<td>25.0</td>
+<td>2</td>
+<td>Florida State</td>
+<td>1630235</td>
+<td>Signed on 08/08/22</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1610612737</td>
+<td>2022</td>
+<td>0</td>
+<td>Aaron Holiday</td>
+<td>Aaron</td>
+<td>aaron-holiday</td>
+<td>3.0</td>
+<td>G</td>
+<td>6-0</td>
+<td>185</td>
+<td>SEP 30, 1996</td>
+<td>26.0</td>
+<td>4</td>
+<td>UCLA</td>
+<td>1628988</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<hr>
+<section id="colleges" class="level3">
+<h3 class="anchored" data-anchor-id="colleges">Colleges</h3>
+<div id="cell-15" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the value counts and convert to dictionary</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>school_counts_dict <span class="op">=</span> all_players_info_df[<span class="st">'SCHOOL'</span>].value_counts().to_dict()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>school_counts_df <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(school_counts_dict.items()), columns<span class="op">=</span>[<span class="st">'SCHOOL'</span>, <span class="st">'Count'</span>])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the DataFrame to include only rows with values &gt; 1</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>filtered_school_counts_df <span class="op">=</span> school_counts_df[school_counts_df[<span class="st">'Count'</span>] <span class="op">&gt;</span> <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-17" class="cell" data-tags="[&quot;hide-code&quot;,&quot;hide-warning&quot;,&quot;hide-message&quot;]" data-execution_count="10">
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\conda_tmp\ipykernel_43692\4198972769.py:6: SettingWithCopyWarning:
+
+
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+</code></pre>
+</div>
+</div>
+<div id="cell-18" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(bubble_df, x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, custom_data<span class="op">=</span>[<span class="st">"l"</span>, <span class="st">"rank"</span>, <span class="st">"k"</span>], color<span class="op">=</span><span class="st">"rank"</span>, width<span class="op">=</span><span class="dv">600</span>, height<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                 size<span class="op">=</span><span class="st">"s"</span>, hover_name<span class="op">=</span><span class="st">"l"</span>, size_max<span class="op">=</span><span class="dv">70</span>, text<span class="op">=</span><span class="st">"l"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                 color_continuous_scale<span class="op">=</span>pal_vi, opacity<span class="op">=</span><span class="fl">0.95</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Update trace and layout settings</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>fig.update_traces(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    hovertemplate<span class="op">=</span><span class="st">"%</span><span class="sc">{customdata[0]}</span><span class="st">&lt;br&gt;%</span><span class="sc">{customdata[2]}</span><span class="st">"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    texttemplate<span class="op">=</span><span class="st">"&lt;b style='letter-spacing: 0.25px;text-transform:uppercase;font-family:Roboto Condensed;'&gt;%</span><span class="sc">{customdata[0]}</span><span class="st">&lt;/b&gt;&lt;br&gt;%</span><span class="sc">{customdata[2]}</span><span class="st">"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    textfont_color<span class="op">=</span>font_colors,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    textfont_size<span class="op">=</span>font_size</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    showlegend<span class="op">=</span><span class="va">False</span>, coloraxis_showscale<span class="op">=</span><span class="va">False</span>, xaxis_visible<span class="op">=</span><span class="va">False</span>, yaxis_visible<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    yaxis_scaleanchor<span class="op">=</span><span class="st">"x"</span>, yaxis_scaleratio<span class="op">=</span><span class="fl">0.95</span>, plot_bgcolor<span class="op">=</span><span class="st">'rgba(0, 0, 0, 0)'</span>, paper_bgcolor<span class="op">=</span><span class="st">'rgba(0, 0, 0, 0)'</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#title={'text': "&lt;b&gt;NBA Player Background&lt;/b&gt;", 'y': 0.97, 'x': 0.5, 'xanchor': 'center', 'yanchor': 'top'},</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="bu">dict</span>(</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        family<span class="op">=</span><span class="st">"Roboto"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">12</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"black"</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="6cb7490a-a934-41a3-a820-dbf24b7ae30f" class="plotly-graph-div" style="height:500px; width:600px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("6cb7490a-a934-41a3-a820-dbf24b7ae30f")) {                    Plotly.newPlot(                        "6cb7490a-a934-41a3-a820-dbf24b7ae30f",                        [{"customdata":[["Miami",0,2],["Illinois",29,2],["USC",28,2],["TCU",27,2],["New Zealand Breakers",26,2],["Pittsburgh",25,2],["Virginia Commonwealth",24,2],["Fresno St",23,2],["Oakland",22,2],["FC Barcelona",21,2],["DePaul",20,2],["West Virginia",19,2],["Maccabi Tel Aviv",17,2],["Notre Dame",16,2],["Tulsa",15,2],["Murray St",18,2],["Union Olimpija",13,2],["Cajasol Sevilla",1,2],["Xavier",2,2],["South Carolina",3,2],["Real Madrid",14,2],["Oregon St",5,2],["Utah St",6,2],["Baskonia",4,2],["Seton Hall",8,2],["Fenerbahce",9,2],["St. Mary's",10,2],["Providence",11,2],["Wichita St",12,2],["Western Kentucky",7,2],["Georgetown",38,3],["Nebraska",44,3],["Utah",43,3],["Arizona St",41,3],["San Diego St",40,3],["Nevada",39,3],["Wisconsin",37,3],["Oklahoma St",42,3],["Anadolu Efes",35,3],["Kansas St",30,3],["North Carolina St",31,3],["Georgia",36,3],["Georgia Tech",33,3],["Iowa",34,3],["Missouri",32,3],["Stanford",45,4],["UNLV",46,4],["Connecticut",47,4],["Oklahoma",48,4],["Florida",51,5],["Auburn",58,5],["Mega Basket",57,5],["Maryland",56,5],["Michigan St",55,5],["Marquette",49,5],["Colorado",53,5],["Iowa St",52,5],["Wake Forest",50,5],["Syracuse",54,5],["Indiana",63,6],["Arkansas",64,6],["Louisville",65,6],["Alabama",61,6],["Tennessee",60,6],["Vanderbilt",59,6],["Texas A&M",62,6],["Ohio St",66,7],["Memphis",67,7],["Baylor",68,7],["NBA G League Ignite",69,7],["Louisiana St",70,7],["Washington",71,8],["Oregon",72,8],["Villanova",73,8],["Southern California",78,9],["North Carolina",77,9],["Virginia",74,9],["Michigan",75,9],["Gonzaga",76,9],["Texas",79,10],["Florida St",80,10],["Kansas",81,10],["UCLA",82,11],["Arizona",83,12],["Duke",84,25],["Kentucky",85,26]],"hovertemplate":"%{customdata[0]}\u003cbr\u003e%{customdata[2]}","hovertext":["Miami","Illinois","USC","TCU","New Zealand Breakers","Pittsburgh","Virginia Commonwealth","Fresno St","Oakland","FC Barcelona","DePaul","West Virginia","Maccabi Tel Aviv","Notre Dame","Tulsa","Murray St","Union Olimpija","Cajasol Sevilla","Xavier","South Carolina","Real Madrid","Oregon St","Utah St","Baskonia","Seton Hall","Fenerbahce","St. Mary's","Providence","Wichita St","Western Kentucky","Georgetown","Nebraska","Utah","Arizona St","San Diego St","Nevada","Wisconsin","Oklahoma St","Anadolu Efes","Kansas St","North Carolina St","Georgia","Georgia Tech","Iowa","Missouri","Stanford","UNLV","Connecticut","Oklahoma","Florida","Auburn","Mega Basket","Maryland","Michigan St","Marquette","Colorado","Iowa St","Wake Forest","Syracuse","Indiana","Arkansas","Louisville","Alabama","Tennessee","Vanderbilt","Texas A&M","Ohio St","Memphis","Baylor","NBA G League Ignite","Louisiana St","Washington","Oregon","Villanova","Southern California","North Carolina","Virginia","Michigan","Gonzaga","Texas","Florida St","Kansas","UCLA","Arizona","Duke","Kentucky"],"legendgroup":"","marker":{"color":[0,29,28,27,26,25,24,23,22,21,20,19,17,16,15,18,13,1,2,3,14,5,6,4,8,9,10,11,12,7,38,44,43,41,40,39,37,42,35,30,31,36,33,34,32,45,46,47,48,51,58,57,56,55,49,53,52,50,54,63,64,65,61,60,59,62,66,67,68,69,70,71,72,73,78,77,74,75,76,79,80,81,82,83,84,85],"coloraxis":"coloraxis","opacity":0.95,"size":[0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.019134455393991383,0.019134455393991383,0.019134455393991383,0.019134455393991383,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.03826891078798277,0.03826891078798277,0.03826891078798277,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.047836138484978474,0.047836138484978474,0.047836138484978474,0.0526197523334763,0.057403366181974134,0.11959034621244617,0.124373960060944],"sizemode":"area","sizeref":0.000025382440828764082,"symbol":"circle"},"mode":"markers+text","name":"","orientation":"v","showlegend":false,"text":["Miami","Illinois","USC","TCU","New Zealand Breakers","Pittsburgh","Virginia Commonwealth","Fresno St","Oakland","FC Barcelona","DePaul","West Virginia","Maccabi Tel Aviv","Notre Dame","Tulsa","Murray St","Union Olimpija","Cajasol Sevilla","Xavier","South Carolina","Real Madrid","Oregon St","Utah St","Baskonia","Seton Hall","Fenerbahce","St. Mary's","Providence","Wichita St","Western Kentucky","Georgetown","Nebraska","Utah","Arizona St","San Diego St","Nevada","Wisconsin","Oklahoma St","Anadolu Efes","Kansas St","North Carolina St","Georgia","Georgia Tech","Iowa","Missouri","Stanford","UNLV","Connecticut","Oklahoma","Florida","Auburn","Mega Basket","Maryland","Michigan St","Marquette","Colorado","Iowa St","Wake Forest","Syracuse","Indiana","Arkansas","Louisville","Alabama","Tennessee","Vanderbilt","Texas A&M","Ohio St","Memphis","Baylor","NBA G League Ignite","Louisiana St","Washington","Oregon","Villanova","Southern California","North Carolina","Virginia","Michigan","Gonzaga","Texas","Florida St","Kansas","UCLA","Arizona","Duke","Kentucky"],"x":[-0.7338843084340969,-0.7521804701403255,-0.5703429526987958,-0.7033523322964841,-0.7432429901069548,-0.48895081622839554,-0.8035447700882118,-0.8043317607107053,-0.5977758686345022,-0.7321608848742374,-0.7957195187289228,-0.7147837654191763,-0.857764650106056,-0.18744465014197778,-0.569987075348215,-0.6770709327001144,-0.47543593686608854,-0.8653799803830375,-0.807150951851615,-0.29768168198155714,0.02057976234974149,0.16021368029971048,-0.4075240395151756,-0.10245149056933933,-0.9195998604008817,-0.8531246756324843,-0.7857568328842973,-0.6767150553495338,-0.8965037433807318,-0.5788141205736489,-0.4986709199041272,-0.5929766006942897,-0.47251121412325275,-0.07498426639025783,-0.3734744295581321,-0.6252173690879803,-0.4934220189317086,-0.6213713022136791,-0.6836484007682194,-0.6816013774628661,-0.5999876929344719,-0.45792865936874333,-0.3567473661512697,-0.6161224012412605,-0.309010505746797,0.0619506508925637,-0.4933399458387336,-0.3215984066184832,-0.2139025775787044,-0.18275717111110631,-0.21879249559772143,-0.35683922247479405,-0.3405624443483971,-0.0657164789051771,-0.5015691121217144,-0.11427953147474454,-0.5349903190414806,0.2303687995807253,0.4207262322047636,-0.01793017703567074,-0.1891995043495321,0.29335107116418724,0.10593694174491172,0.5437813473707266,-0.39625950244887753,-0.36594010824918144,-0.030926101718151165,-0.1700173671923697,-0.20790005645170515,0.07779585267666896,-0.3136791466742044,0.18241618068539048,-0.10752771557755747,0.3539105762728701,0.41577959861604047,0.10774503801061218,0.181760149666588,0.058437504117780995,-0.006460351515187163,0.8133703257450103,0.3051812617130222,0.6555266051077634,0.5598297075649781,0.5597732829665711,0.36599152430969734,0.7600696530325629],"xaxis":"x","y":[0.1618480024092254,-0.05203930583443886,0.4990672229513694,0.3136814382147607,-0.25867105287582326,-0.5879879779716614,0.07623963412997331,-0.14931014179848465,-0.529975125984847,-0.36848252577784485,0.2532688939225723,0.4234570956897304,-0.01989348840409943,0.751624565109142,0.6094359050519175,0.5271832490243862,0.680795128412756,0.16766052564332015,0.36304455139754205,0.7570254398993971,0.7794486855086434,0.7427737338987755,0.7677971216973901,0.8220343333459461,0.0715274031092474,-0.24830824324864634,0.5079804435404388,0.637551931124934,0.2982568111741428,0.7194516126117408,-0.33022547251355094,-0.05042852294573618,0.4248927957030168,0.7023746228071408,-0.5462974652389738,0.21898285187504626,-0.4652977050209484,-0.2735097327489978,0.04982457489819087,-0.15249569640846444,0.3799282951960222,0.5592780927141943,0.6493957986108638,-0.40858196525639523,-0.6651101812368714,0.6528074195044372,0.2807600681577807,0.5080712435672787,0.6210506827676734,0.4183698267564057,-0.5392664423318523,-0.39235200131701287,0.34386528104438097,0.5478105775314537,-0.17541094974929852,-0.6790179071666814,0.09314559420960074,0.6188092997388728,0.5783301997064222,0.3392403073757815,0.23564622358539408,0.4471624172168202,0.4848461273037585,0.4431012921280353,-0.025947559837564544,0.16279790963724114,-0.5077264660458614,-0.35512101365528653,0.03770406223530827,-0.6832666063645995,-0.20681020033857545,-0.49703040656180475,-0.15085555257412775,-0.6360094079659268,0.27329482432793667,-0.07748217862405679,0.26614819006790147,-0.3063597528187764,0.12690301132646903,0.06506394109683938,0.059778010449693664,0.2547801055159343,-0.5131439430108377,0.01459238949858761,-0.2528667087644887,-0.2528667087644887],"yaxis":"y","type":"scatter","textfont":{"color":["black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","white","white","white","white","white","white","white"],"size":[4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,7.02385643226474,7.02385643226474,7.02385643226474,7.02385643226474,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,9.291688682196947,9.291688682196947,9.291688682196947,9.291688682196947,9.291688682196947,9.933233026670296,9.933233026670296,9.933233026670296,10.53578464839711,10.53578464839711,10.53578464839711,10.53578464839711,10.53578464839711,11.105692141990382,11.105692141990382,11.105692141990382,11.647748183573233,12.165676205751994,17.55964108066185,17.90739050439605]},"texttemplate":"\u003cb style='letter-spacing: 0.25px;text-transform:uppercase;font-family:Roboto Condensed;'\u003e%{customdata[0]}\u003c\u002fb\u003e\u003cbr\u003e%{customdata[2]}"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"x"},"visible":false},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"y"},"visible":false,"scaleanchor":"x","scaleratio":0.95},"coloraxis":{"colorbar":{"title":{"text":"rank"}},"colorscale":[[0.0,"#fde3fe"],[0.011764705882352941,"#fbe2f5"],[0.023529411764705882,"#f9e2ec"],[0.03529411764705882,"#f7e1e4"],[0.047058823529411764,"#f6e0db"],[0.058823529411764705,"#f4e0d2"],[0.07058823529411765,"#f2dfc9"],[0.08235294117647059,"#f0dfc1"],[0.09411764705882353,"#eedeb8"],[0.10588235294117647,"#ecddaf"],[0.11764705882352941,"#ebdda6"],[0.12941176470588237,"#e9dc9e"],[0.1411764705882353,"#e7db95"],[0.15294117647058825,"#e5db8c"],[0.16470588235294117,"#e3da83"],[0.17647058823529413,"#e4d77b"],[0.18823529411764706,"#e6d373"],[0.2,"#e8d06b"],[0.21176470588235294,"#eacc63"],[0.2235294117647059,"#ecc85b"],[0.23529411764705882,"#edc553"],[0.24705882352941178,"#efc14b"],[0.25882352941176473,"#f1bd44"],[0.27058823529411763,"#f3ba3c"],[0.2823529411764706,"#f4b634"],[0.29411764705882354,"#f6b22c"],[0.3058823529411765,"#f8af24"],[0.3176470588235294,"#faab1c"],[0.32941176470588235,"#fba714"],[0.3411764705882353,"#fca412"],[0.35294117647058826,"#fca213"],[0.36470588235294116,"#fc9f13"],[0.3764705882352941,"#fc9d14"],[0.38823529411764707,"#fc9a15"],[0.4,"#fc9816"],[0.4117647058823529,"#fc9617"],[0.4235294117647059,"#fb9318"],[0.43529411764705883,"#fb9119"],[0.4470588235294118,"#fb8e1a"],[0.4588235294117647,"#fb8c1b"],[0.47058823529411764,"#fb891c"],[0.4823529411764706,"#fb871d"],[0.49411764705882355,"#fb841e"],[0.5058823529411764,"#fb811f"],[0.5176470588235295,"#fb7d20"],[0.5294117647058824,"#fc7a21"],[0.5411764705882353,"#fc7622"],[0.5529411764705883,"#fc7223"],[0.5647058823529412,"#fd6f24"],[0.5764705882352941,"#fd6b25"],[0.5882352941176471,"#fd6726"],[0.6,"#fd6427"],[0.611764705882353,"#fe6028"],[0.6235294117647059,"#fe5c29"],[0.6352941176470588,"#fe592a"],[0.6470588235294118,"#ff552b"],[0.6588235294117647,"#ff512c"],[0.6705882352941176,"#ff4f2f"],[0.6823529411764706,"#ff5137"],[0.6941176470588235,"#fe523e"],[0.7058823529411765,"#fe5345"],[0.7176470588235294,"#fd544d"],[0.7294117647058823,"#fd5554"],[0.7411764705882353,"#fd575b"],[0.7529411764705882,"#fc5862"],[0.7647058823529411,"#fc596a"],[0.7764705882352941,"#fc5a71"],[0.788235294117647,"#fb5b78"],[0.8,"#fb5d7f"],[0.8117647058823529,"#fb5e87"],[0.8235294117647058,"#fa5f8e"],[0.8352941176470589,"#f75f93"],[0.8470588235294118,"#e75b8e"],[0.8588235294117647,"#d65789"],[0.8705882352941177,"#c55283"],[0.8823529411764706,"#b54e7e"],[0.8941176470588236,"#a44a79"],[0.9058823529411765,"#934573"],[0.9176470588235294,"#83416e"],[0.9294117647058824,"#723d69"],[0.9411764705882353,"#613963"],[0.9529411764705882,"#51345e"],[0.9647058823529412,"#403059"],[0.9764705882352941,"#2f2c54"],[0.9882352941176471,"#1f274e"],[1.0,"#0e2349"]],"showscale":false},"legend":{"tracegroupgap":0,"itemsizing":"constant"},"height":500,"width":600,"font":{"family":"Roboto","size":12,"color":"black"},"showlegend":false,"plot_bgcolor":"rgba(0, 0, 0, 0)","paper_bgcolor":"rgba(0, 0, 0, 0)"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('6cb7490a-a934-41a3-a820-dbf24b7ae30f');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
