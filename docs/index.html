@@ -120,6 +120,35 @@ require(['plotly'], function(Plotly) {
 </script>
 
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -177,6 +206,13 @@ require(['plotly'], function(Plotly) {
   <li><a href="#commonteamroster" id="toc-commonteamroster" class="nav-link" data-scroll-target="#commonteamroster">CommonTeamRoster</a>
   <ul class="collapse">
   <li><a href="#colleges" id="toc-colleges" class="nav-link" data-scroll-target="#colleges">Colleges</a></li>
+  <li><a href="#team-player-dashboard" id="toc-team-player-dashboard" class="nav-link" data-scroll-target="#team-player-dashboard">Team Player Dashboard</a></li>
+  </ul></li>
+  <li><a href="#player-statistics" id="toc-player-statistics" class="nav-link" data-scroll-target="#player-statistics">Player Statistics</a>
+  <ul class="collapse">
+  <li><a href="#points-per-game" id="toc-points-per-game" class="nav-link" data-scroll-target="#points-per-game">Points Per Game</a></li>
+  <li><a href="#player-impact-estimate-pie-score" id="toc-player-impact-estimate-pie-score" class="nav-link" data-scroll-target="#player-impact-estimate-pie-score">Player Impact Estimate (PIE) score</a></li>
+  <li><a href="#per" id="toc-per" class="nav-link" data-scroll-target="#per">PER</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -205,7 +241,7 @@ require(['plotly'], function(Plotly) {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get_teams returns a list of 30 dictionaries, each an NBA team</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nba_teams <span class="op">=</span> teams.get_teams()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Number of teams fetched: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">len</span>(nba_teams)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of teams fetched: </span><span class="sc">{</span><span class="bu">len</span>(nba_teams)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of teams fetched: 30</code></pre>
 </div>
@@ -217,346 +253,68 @@ require(['plotly'], function(Plotly) {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">logo_url</th>
 <th data-quarto-table-cell-role="th">id</th>
 <th data-quarto-table-cell-role="th">full_name</th>
 <th data-quarto-table-cell-role="th">abbreviation</th>
-<th data-quarto-table-cell-role="th">nickname</th>
-<th data-quarto-table-cell-role="th">city</th>
 <th data-quarto-table-cell-role="th">state</th>
 <th data-quarto-table-cell-role="th">year_founded</th>
-<th data-quarto-table-cell-role="th">logo_url</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612737</td>
 <td>Atlanta Hawks</td>
 <td>ATL</td>
-<td>Hawks</td>
-<td>Atlanta</td>
 <td>Georgia</td>
 <td>1949</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612738</td>
 <td>Boston Celtics</td>
 <td>BOS</td>
-<td>Celtics</td>
-<td>Boston</td>
 <td>Massachusetts</td>
 <td>1946</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612739</td>
 <td>Cleveland Cavaliers</td>
 <td>CLE</td>
-<td>Cavaliers</td>
-<td>Cleveland</td>
 <td>Ohio</td>
 <td>1970</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612740</td>
 <td>New Orleans Pelicans</td>
 <td>NOP</td>
-<td>Pelicans</td>
-<td>New Orleans</td>
 <td>Louisiana</td>
 <td>2002</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612741</td>
 <td>Chicago Bulls</td>
 <td>CHI</td>
-<td>Bulls</td>
-<td>Chicago</td>
 <td>Illinois</td>
 <td>1966</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
+<td><img src="https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg" class="img-fluid" width="50"></td>
 <td>1610612742</td>
 <td>Dallas Mavericks</td>
 <td>DAL</td>
-<td>Mavericks</td>
-<td>Dallas</td>
 <td>Texas</td>
 <td>1980</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>1610612743</td>
-<td>Denver Nuggets</td>
-<td>DEN</td>
-<td>Nuggets</td>
-<td>Denver</td>
-<td>Colorado</td>
-<td>1976</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>1610612744</td>
-<td>Golden State Warriors</td>
-<td>GSW</td>
-<td>Warriors</td>
-<td>Golden State</td>
-<td>California</td>
-<td>1946</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>1610612745</td>
-<td>Houston Rockets</td>
-<td>HOU</td>
-<td>Rockets</td>
-<td>Houston</td>
-<td>Texas</td>
-<td>1967</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>1610612746</td>
-<td>Los Angeles Clippers</td>
-<td>LAC</td>
-<td>Clippers</td>
-<td>Los Angeles</td>
-<td>California</td>
-<td>1970</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">10</td>
-<td>1610612747</td>
-<td>Los Angeles Lakers</td>
-<td>LAL</td>
-<td>Lakers</td>
-<td>Los Angeles</td>
-<td>California</td>
-<td>1948</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">11</td>
-<td>1610612748</td>
-<td>Miami Heat</td>
-<td>MIA</td>
-<td>Heat</td>
-<td>Miami</td>
-<td>Florida</td>
-<td>1988</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">12</td>
-<td>1610612749</td>
-<td>Milwaukee Bucks</td>
-<td>MIL</td>
-<td>Bucks</td>
-<td>Milwaukee</td>
-<td>Wisconsin</td>
-<td>1968</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">13</td>
-<td>1610612750</td>
-<td>Minnesota Timberwolves</td>
-<td>MIN</td>
-<td>Timberwolves</td>
-<td>Minnesota</td>
-<td>Minnesota</td>
-<td>1989</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">14</td>
-<td>1610612751</td>
-<td>Brooklyn Nets</td>
-<td>BKN</td>
-<td>Nets</td>
-<td>Brooklyn</td>
-<td>New York</td>
-<td>1976</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">15</td>
-<td>1610612752</td>
-<td>New York Knicks</td>
-<td>NYK</td>
-<td>Knicks</td>
-<td>New York</td>
-<td>New York</td>
-<td>1946</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">16</td>
-<td>1610612753</td>
-<td>Orlando Magic</td>
-<td>ORL</td>
-<td>Magic</td>
-<td>Orlando</td>
-<td>Florida</td>
-<td>1989</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">17</td>
-<td>1610612754</td>
-<td>Indiana Pacers</td>
-<td>IND</td>
-<td>Pacers</td>
-<td>Indiana</td>
-<td>Indiana</td>
-<td>1976</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">18</td>
-<td>1610612755</td>
-<td>Philadelphia 76ers</td>
-<td>PHI</td>
-<td>76ers</td>
-<td>Philadelphia</td>
-<td>Pennsylvania</td>
-<td>1949</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">19</td>
-<td>1610612756</td>
-<td>Phoenix Suns</td>
-<td>PHX</td>
-<td>Suns</td>
-<td>Phoenix</td>
-<td>Arizona</td>
-<td>1968</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">20</td>
-<td>1610612757</td>
-<td>Portland Trail Blazers</td>
-<td>POR</td>
-<td>Trail Blazers</td>
-<td>Portland</td>
-<td>Oregon</td>
-<td>1970</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">21</td>
-<td>1610612758</td>
-<td>Sacramento Kings</td>
-<td>SAC</td>
-<td>Kings</td>
-<td>Sacramento</td>
-<td>California</td>
-<td>1948</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">22</td>
-<td>1610612759</td>
-<td>San Antonio Spurs</td>
-<td>SAS</td>
-<td>Spurs</td>
-<td>San Antonio</td>
-<td>Texas</td>
-<td>1976</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">23</td>
-<td>1610612760</td>
-<td>Oklahoma City Thunder</td>
-<td>OKC</td>
-<td>Thunder</td>
-<td>Oklahoma City</td>
-<td>Oklahoma</td>
-<td>1967</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">24</td>
-<td>1610612761</td>
-<td>Toronto Raptors</td>
-<td>TOR</td>
-<td>Raptors</td>
-<td>Toronto</td>
-<td>Ontario</td>
-<td>1995</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">25</td>
-<td>1610612762</td>
-<td>Utah Jazz</td>
-<td>UTA</td>
-<td>Jazz</td>
-<td>Utah</td>
-<td>Utah</td>
-<td>1974</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">26</td>
-<td>1610612763</td>
-<td>Memphis Grizzlies</td>
-<td>MEM</td>
-<td>Grizzlies</td>
-<td>Memphis</td>
-<td>Tennessee</td>
-<td>1995</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">27</td>
-<td>1610612764</td>
-<td>Washington Wizards</td>
-<td>WAS</td>
-<td>Wizards</td>
-<td>Washington</td>
-<td>District of Columbia</td>
-<td>1961</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">28</td>
-<td>1610612765</td>
-<td>Detroit Pistons</td>
-<td>DET</td>
-<td>Pistons</td>
-<td>Detroit</td>
-<td>Michigan</td>
-<td>1948</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg" class="img-fluid" width="50"></td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">29</td>
-<td>1610612766</td>
-<td>Charlotte Hornets</td>
-<td>CHA</td>
-<td>Hornets</td>
-<td>Charlotte</td>
-<td>North Carolina</td>
-<td>1988</td>
-<td><img src="https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg" class="img-fluid" width="50"></td>
 </tr>
 </tbody>
 </table>
@@ -585,12 +343,8 @@ Number of active players fetched: 531</code></pre>
 <section id="commonteamroster" class="level2">
 <h2 class="anchored" data-anchor-id="commonteamroster">CommonTeamRoster</h2>
 <div id="cell-11" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.static <span class="im">import</span> teams</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.endpoints <span class="im">import</span> CommonTeamRoster</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get_teams returns a list of 30 dictionaries, each an NBA team</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>nba_teams <span class="op">=</span> teams.get_teams()</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>all_nba_teams <span class="op">=</span> [team[<span class="st">"id"</span>] <span class="cf">for</span> team <span class="kw">in</span> nba_teams]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.endpoints <span class="im">import</span> CommonTeamRoster</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>all_nba_teams <span class="op">=</span> [team[<span class="st">"id"</span>] <span class="cf">for</span> team <span class="kw">in</span> nba_teams]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-12" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>script false</span>
@@ -603,7 +357,7 @@ Number of active players fetched: 531</code></pre>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    common_team_roster <span class="op">=</span> CommonTeamRoster(</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        team_id<span class="op">=</span>team_id,</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        league_id_nullable<span class="op">=</span><span class="st">'00'</span>,  <span class="co"># NBA league ID</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        season<span class="op">=</span><span class="st">'2022-23'</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        season<span class="op">=</span><span class="st">'2023-24'</span>,</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        timeout<span class="op">=</span><span class="dv">200</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    team_roster_df <span class="op">=</span> common_team_roster.get_data_frames()[<span class="dv">0</span>]</span>
@@ -611,13 +365,13 @@ Number of active players fetched: 531</code></pre>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate all individual team data frames into a single data frame</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>all_players_info_df <span class="op">=</span> pd.concat(all_players_info, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>all_players_info_df.to_csv(<span class="st">"data/nba_players.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>all_players_info_df.to_csv(<span class="st">"data/nba_players.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Couldn't find program: 'false'</code></pre>
 </div>
 </div>
 <div id="cell-13" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="7">
-<div class="cell-output cell-output-display" data-execution_count="73">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <div>
 
@@ -648,45 +402,7 @@ Number of active players fetched: 531</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>1610612737</td>
-<td>2022</td>
-<td>0</td>
-<td>Donovan Williams</td>
-<td>Donovan</td>
-<td>donovan-williams</td>
-<td>NaN</td>
-<td>G</td>
-<td>6-6</td>
-<td>190</td>
-<td>SEP 06, 2001</td>
-<td>21.0</td>
-<td>R</td>
-<td>UNLV</td>
-<td>1631495</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>1610612737</td>
-<td>2022</td>
-<td>0</td>
-<td>Bruno Fernando</td>
-<td>Bruno</td>
-<td>bruno-fernando</td>
-<td>0.0</td>
-<td>F-C</td>
-<td>6-10</td>
-<td>240</td>
-<td>AUG 15, 1998</td>
-<td>24.0</td>
-<td>3</td>
-<td>Maryland</td>
-<td>1628981</td>
-<td>Traded from HOU on 02/09/23</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1610612737</td>
-<td>2022</td>
+<td>2023</td>
 <td>0</td>
 <td>Jalen Johnson</td>
 <td>Jalen</td>
@@ -696,16 +412,16 @@ Number of active players fetched: 531</code></pre>
 <td>6-8</td>
 <td>219</td>
 <td>DEC 18, 2001</td>
-<td>21.0</td>
-<td>1</td>
+<td>22.0</td>
+<td>2</td>
 <td>Duke</td>
 <td>1630552</td>
 <td>#20 Pick in 2021 Draft</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<td data-quarto-table-cell-role="th">1</td>
 <td>1610612737</td>
-<td>2022</td>
+<td>2023</td>
 <td>0</td>
 <td>Trent Forrest</td>
 <td>Trent</td>
@@ -716,29 +432,67 @@ Number of active players fetched: 531</code></pre>
 <td>210</td>
 <td>JUN 12, 1998</td>
 <td>25.0</td>
-<td>2</td>
+<td>3</td>
 <td>Florida State</td>
 <td>1630235</td>
 <td>Signed on 08/08/22</td>
 </tr>
 <tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>0</td>
+<td>Seth Lundy</td>
+<td>Seth</td>
+<td>seth-lundy</td>
+<td>3.0</td>
+<td>G-F</td>
+<td>6-4</td>
+<td>220</td>
+<td>APR 02, 2000</td>
+<td>24.0</td>
+<td>R</td>
+<td>Penn State</td>
+<td>1641754</td>
+<td>#46 Pick in 2023 Draft</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>0</td>
+<td>Kobe Bufkin</td>
+<td>Kobe</td>
+<td>kobe-bufkin</td>
+<td>4.0</td>
+<td>G</td>
+<td>6-5</td>
+<td>195</td>
+<td>SEP 21, 2003</td>
+<td>20.0</td>
+<td>R</td>
+<td>Michigan</td>
+<td>1641723</td>
+<td>#15 Pick in 2023 Draft</td>
+</tr>
+<tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>1610612737</td>
-<td>2022</td>
+<td>2023</td>
 <td>0</td>
-<td>Aaron Holiday</td>
-<td>Aaron</td>
-<td>aaron-holiday</td>
-<td>3.0</td>
+<td>Dejounte Murray</td>
+<td>Dejounte</td>
+<td>dejounte-murray</td>
+<td>5.0</td>
 <td>G</td>
-<td>6-0</td>
-<td>185</td>
-<td>SEP 30, 1996</td>
-<td>26.0</td>
-<td>4</td>
-<td>UCLA</td>
-<td>1628988</td>
-<td>NaN</td>
+<td>6-5</td>
+<td>180</td>
+<td>SEP 19, 1996</td>
+<td>27.0</td>
+<td>6</td>
+<td>Washington</td>
+<td>1627749</td>
+<td>Traded from SAS on 06/30/22</td>
 </tr>
 </tbody>
 </table>
@@ -750,58 +504,11 @@ Number of active players fetched: 531</code></pre>
 <hr>
 <section id="colleges" class="level3">
 <h3 class="anchored" data-anchor-id="colleges">Colleges</h3>
-<div id="cell-15" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the value counts and convert to dictionary</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>school_counts_dict <span class="op">=</span> all_players_info_df[<span class="st">'SCHOOL'</span>].value_counts().to_dict()</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>school_counts_df <span class="op">=</span> pd.DataFrame(<span class="bu">list</span>(school_counts_dict.items()), columns<span class="op">=</span>[<span class="st">'SCHOOL'</span>, <span class="st">'Count'</span>])</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the DataFrame to include only rows with values &gt; 1</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>filtered_school_counts_df <span class="op">=</span> school_counts_df[school_counts_df[<span class="st">'Count'</span>] <span class="op">&gt;</span> <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-17" class="cell" data-tags="[&quot;hide-code&quot;,&quot;hide-warning&quot;,&quot;hide-message&quot;]" data-execution_count="10">
-<div class="cell-output cell-output-stderr">
-<pre><code>C:\conda_tmp\ipykernel_43692\4198972769.py:6: SettingWithCopyWarning:
-
-
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-</code></pre>
-</div>
-</div>
-<div id="cell-18" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> px.scatter(bubble_df, x<span class="op">=</span><span class="st">"x"</span>, y<span class="op">=</span><span class="st">"y"</span>, custom_data<span class="op">=</span>[<span class="st">"l"</span>, <span class="st">"rank"</span>, <span class="st">"k"</span>], color<span class="op">=</span><span class="st">"rank"</span>, width<span class="op">=</span><span class="dv">600</span>, height<span class="op">=</span><span class="dv">500</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                 size<span class="op">=</span><span class="st">"s"</span>, hover_name<span class="op">=</span><span class="st">"l"</span>, size_max<span class="op">=</span><span class="dv">70</span>, text<span class="op">=</span><span class="st">"l"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                 color_continuous_scale<span class="op">=</span>pal_vi, opacity<span class="op">=</span><span class="fl">0.95</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Update trace and layout settings</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>fig.update_traces(</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    hovertemplate<span class="op">=</span><span class="st">"%</span><span class="sc">{customdata[0]}</span><span class="st">&lt;br&gt;%</span><span class="sc">{customdata[2]}</span><span class="st">"</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    texttemplate<span class="op">=</span><span class="st">"&lt;b style='letter-spacing: 0.25px;text-transform:uppercase;font-family:Roboto Condensed;'&gt;%</span><span class="sc">{customdata[0]}</span><span class="st">&lt;/b&gt;&lt;br&gt;%</span><span class="sc">{customdata[2]}</span><span class="st">"</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    textfont_color<span class="op">=</span>font_colors,</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    textfont_size<span class="op">=</span>font_size</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    showlegend<span class="op">=</span><span class="va">False</span>, coloraxis_showscale<span class="op">=</span><span class="va">False</span>, xaxis_visible<span class="op">=</span><span class="va">False</span>, yaxis_visible<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    yaxis_scaleanchor<span class="op">=</span><span class="st">"x"</span>, yaxis_scaleratio<span class="op">=</span><span class="fl">0.95</span>, plot_bgcolor<span class="op">=</span><span class="st">'rgba(0, 0, 0, 0)'</span>, paper_bgcolor<span class="op">=</span><span class="st">'rgba(0, 0, 0, 0)'</span>,</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#title={'text': "&lt;b&gt;NBA Player Background&lt;/b&gt;", 'y': 0.97, 'x': 0.5, 'xanchor': 'center', 'yanchor': 'top'},</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="bu">dict</span>(</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        family<span class="op">=</span><span class="st">"Roboto"</span>,</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">12</span>,</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"black"</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-18" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="11">
 <div class="cell-output cell-output-display">
-<div>                            <div id="6cb7490a-a934-41a3-a820-dbf24b7ae30f" class="plotly-graph-div" style="height:500px; width:600px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("6cb7490a-a934-41a3-a820-dbf24b7ae30f")) {                    Plotly.newPlot(                        "6cb7490a-a934-41a3-a820-dbf24b7ae30f",                        [{"customdata":[["Miami",0,2],["Illinois",29,2],["USC",28,2],["TCU",27,2],["New Zealand Breakers",26,2],["Pittsburgh",25,2],["Virginia Commonwealth",24,2],["Fresno St",23,2],["Oakland",22,2],["FC Barcelona",21,2],["DePaul",20,2],["West Virginia",19,2],["Maccabi Tel Aviv",17,2],["Notre Dame",16,2],["Tulsa",15,2],["Murray St",18,2],["Union Olimpija",13,2],["Cajasol Sevilla",1,2],["Xavier",2,2],["South Carolina",3,2],["Real Madrid",14,2],["Oregon St",5,2],["Utah St",6,2],["Baskonia",4,2],["Seton Hall",8,2],["Fenerbahce",9,2],["St. Mary's",10,2],["Providence",11,2],["Wichita St",12,2],["Western Kentucky",7,2],["Georgetown",38,3],["Nebraska",44,3],["Utah",43,3],["Arizona St",41,3],["San Diego St",40,3],["Nevada",39,3],["Wisconsin",37,3],["Oklahoma St",42,3],["Anadolu Efes",35,3],["Kansas St",30,3],["North Carolina St",31,3],["Georgia",36,3],["Georgia Tech",33,3],["Iowa",34,3],["Missouri",32,3],["Stanford",45,4],["UNLV",46,4],["Connecticut",47,4],["Oklahoma",48,4],["Florida",51,5],["Auburn",58,5],["Mega Basket",57,5],["Maryland",56,5],["Michigan St",55,5],["Marquette",49,5],["Colorado",53,5],["Iowa St",52,5],["Wake Forest",50,5],["Syracuse",54,5],["Indiana",63,6],["Arkansas",64,6],["Louisville",65,6],["Alabama",61,6],["Tennessee",60,6],["Vanderbilt",59,6],["Texas A&M",62,6],["Ohio St",66,7],["Memphis",67,7],["Baylor",68,7],["NBA G League Ignite",69,7],["Louisiana St",70,7],["Washington",71,8],["Oregon",72,8],["Villanova",73,8],["Southern California",78,9],["North Carolina",77,9],["Virginia",74,9],["Michigan",75,9],["Gonzaga",76,9],["Texas",79,10],["Florida St",80,10],["Kansas",81,10],["UCLA",82,11],["Arizona",83,12],["Duke",84,25],["Kentucky",85,26]],"hovertemplate":"%{customdata[0]}\u003cbr\u003e%{customdata[2]}","hovertext":["Miami","Illinois","USC","TCU","New Zealand Breakers","Pittsburgh","Virginia Commonwealth","Fresno St","Oakland","FC Barcelona","DePaul","West Virginia","Maccabi Tel Aviv","Notre Dame","Tulsa","Murray St","Union Olimpija","Cajasol Sevilla","Xavier","South Carolina","Real Madrid","Oregon St","Utah St","Baskonia","Seton Hall","Fenerbahce","St. Mary's","Providence","Wichita St","Western Kentucky","Georgetown","Nebraska","Utah","Arizona St","San Diego St","Nevada","Wisconsin","Oklahoma St","Anadolu Efes","Kansas St","North Carolina St","Georgia","Georgia Tech","Iowa","Missouri","Stanford","UNLV","Connecticut","Oklahoma","Florida","Auburn","Mega Basket","Maryland","Michigan St","Marquette","Colorado","Iowa St","Wake Forest","Syracuse","Indiana","Arkansas","Louisville","Alabama","Tennessee","Vanderbilt","Texas A&M","Ohio St","Memphis","Baylor","NBA G League Ignite","Louisiana St","Washington","Oregon","Villanova","Southern California","North Carolina","Virginia","Michigan","Gonzaga","Texas","Florida St","Kansas","UCLA","Arizona","Duke","Kentucky"],"legendgroup":"","marker":{"color":[0,29,28,27,26,25,24,23,22,21,20,19,17,16,15,18,13,1,2,3,14,5,6,4,8,9,10,11,12,7,38,44,43,41,40,39,37,42,35,30,31,36,33,34,32,45,46,47,48,51,58,57,56,55,49,53,52,50,54,63,64,65,61,60,59,62,66,67,68,69,70,71,72,73,78,77,74,75,76,79,80,81,82,83,84,85],"coloraxis":"coloraxis","opacity":0.95,"size":[0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.009567227696995693,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.014350841545493534,0.019134455393991383,0.019134455393991383,0.019134455393991383,0.019134455393991383,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02391806924248923,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.02870168309098707,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.033485296939484925,0.03826891078798277,0.03826891078798277,0.03826891078798277,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.04305252463648062,0.047836138484978474,0.047836138484978474,0.047836138484978474,0.0526197523334763,0.057403366181974134,0.11959034621244617,0.124373960060944],"sizemode":"area","sizeref":0.000025382440828764082,"symbol":"circle"},"mode":"markers+text","name":"","orientation":"v","showlegend":false,"text":["Miami","Illinois","USC","TCU","New Zealand Breakers","Pittsburgh","Virginia Commonwealth","Fresno St","Oakland","FC Barcelona","DePaul","West Virginia","Maccabi Tel Aviv","Notre Dame","Tulsa","Murray St","Union Olimpija","Cajasol Sevilla","Xavier","South Carolina","Real Madrid","Oregon St","Utah St","Baskonia","Seton Hall","Fenerbahce","St. Mary's","Providence","Wichita St","Western Kentucky","Georgetown","Nebraska","Utah","Arizona St","San Diego St","Nevada","Wisconsin","Oklahoma St","Anadolu Efes","Kansas St","North Carolina St","Georgia","Georgia Tech","Iowa","Missouri","Stanford","UNLV","Connecticut","Oklahoma","Florida","Auburn","Mega Basket","Maryland","Michigan St","Marquette","Colorado","Iowa St","Wake Forest","Syracuse","Indiana","Arkansas","Louisville","Alabama","Tennessee","Vanderbilt","Texas A&M","Ohio St","Memphis","Baylor","NBA G League Ignite","Louisiana St","Washington","Oregon","Villanova","Southern California","North Carolina","Virginia","Michigan","Gonzaga","Texas","Florida St","Kansas","UCLA","Arizona","Duke","Kentucky"],"x":[-0.7338843084340969,-0.7521804701403255,-0.5703429526987958,-0.7033523322964841,-0.7432429901069548,-0.48895081622839554,-0.8035447700882118,-0.8043317607107053,-0.5977758686345022,-0.7321608848742374,-0.7957195187289228,-0.7147837654191763,-0.857764650106056,-0.18744465014197778,-0.569987075348215,-0.6770709327001144,-0.47543593686608854,-0.8653799803830375,-0.807150951851615,-0.29768168198155714,0.02057976234974149,0.16021368029971048,-0.4075240395151756,-0.10245149056933933,-0.9195998604008817,-0.8531246756324843,-0.7857568328842973,-0.6767150553495338,-0.8965037433807318,-0.5788141205736489,-0.4986709199041272,-0.5929766006942897,-0.47251121412325275,-0.07498426639025783,-0.3734744295581321,-0.6252173690879803,-0.4934220189317086,-0.6213713022136791,-0.6836484007682194,-0.6816013774628661,-0.5999876929344719,-0.45792865936874333,-0.3567473661512697,-0.6161224012412605,-0.309010505746797,0.0619506508925637,-0.4933399458387336,-0.3215984066184832,-0.2139025775787044,-0.18275717111110631,-0.21879249559772143,-0.35683922247479405,-0.3405624443483971,-0.0657164789051771,-0.5015691121217144,-0.11427953147474454,-0.5349903190414806,0.2303687995807253,0.4207262322047636,-0.01793017703567074,-0.1891995043495321,0.29335107116418724,0.10593694174491172,0.5437813473707266,-0.39625950244887753,-0.36594010824918144,-0.030926101718151165,-0.1700173671923697,-0.20790005645170515,0.07779585267666896,-0.3136791466742044,0.18241618068539048,-0.10752771557755747,0.3539105762728701,0.41577959861604047,0.10774503801061218,0.181760149666588,0.058437504117780995,-0.006460351515187163,0.8133703257450103,0.3051812617130222,0.6555266051077634,0.5598297075649781,0.5597732829665711,0.36599152430969734,0.7600696530325629],"xaxis":"x","y":[0.1618480024092254,-0.05203930583443886,0.4990672229513694,0.3136814382147607,-0.25867105287582326,-0.5879879779716614,0.07623963412997331,-0.14931014179848465,-0.529975125984847,-0.36848252577784485,0.2532688939225723,0.4234570956897304,-0.01989348840409943,0.751624565109142,0.6094359050519175,0.5271832490243862,0.680795128412756,0.16766052564332015,0.36304455139754205,0.7570254398993971,0.7794486855086434,0.7427737338987755,0.7677971216973901,0.8220343333459461,0.0715274031092474,-0.24830824324864634,0.5079804435404388,0.637551931124934,0.2982568111741428,0.7194516126117408,-0.33022547251355094,-0.05042852294573618,0.4248927957030168,0.7023746228071408,-0.5462974652389738,0.21898285187504626,-0.4652977050209484,-0.2735097327489978,0.04982457489819087,-0.15249569640846444,0.3799282951960222,0.5592780927141943,0.6493957986108638,-0.40858196525639523,-0.6651101812368714,0.6528074195044372,0.2807600681577807,0.5080712435672787,0.6210506827676734,0.4183698267564057,-0.5392664423318523,-0.39235200131701287,0.34386528104438097,0.5478105775314537,-0.17541094974929852,-0.6790179071666814,0.09314559420960074,0.6188092997388728,0.5783301997064222,0.3392403073757815,0.23564622358539408,0.4471624172168202,0.4848461273037585,0.4431012921280353,-0.025947559837564544,0.16279790963724114,-0.5077264660458614,-0.35512101365528653,0.03770406223530827,-0.6832666063645995,-0.20681020033857545,-0.49703040656180475,-0.15085555257412775,-0.6360094079659268,0.27329482432793667,-0.07748217862405679,0.26614819006790147,-0.3063597528187764,0.12690301132646903,0.06506394109683938,0.059778010449693664,0.2547801055159343,-0.5131439430108377,0.01459238949858761,-0.2528667087644887,-0.2528667087644887],"yaxis":"y","type":"scatter","textfont":{"color":["black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","white","white","white","white","white","white","white"],"size":[4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,4.966616513335148,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,6.082838102875997,7.02385643226474,7.02385643226474,7.02385643226474,7.02385643226474,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,7.852910223371553,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,8.602432142807064,9.291688682196947,9.291688682196947,9.291688682196947,9.291688682196947,9.291688682196947,9.933233026670296,9.933233026670296,9.933233026670296,10.53578464839711,10.53578464839711,10.53578464839711,10.53578464839711,10.53578464839711,11.105692141990382,11.105692141990382,11.105692141990382,11.647748183573233,12.165676205751994,17.55964108066185,17.90739050439605]},"texttemplate":"\u003cb style='letter-spacing: 0.25px;text-transform:uppercase;font-family:Roboto Condensed;'\u003e%{customdata[0]}\u003c\u002fb\u003e\u003cbr\u003e%{customdata[2]}"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"x"},"visible":false},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"y"},"visible":false,"scaleanchor":"x","scaleratio":0.95},"coloraxis":{"colorbar":{"title":{"text":"rank"}},"colorscale":[[0.0,"#fde3fe"],[0.011764705882352941,"#fbe2f5"],[0.023529411764705882,"#f9e2ec"],[0.03529411764705882,"#f7e1e4"],[0.047058823529411764,"#f6e0db"],[0.058823529411764705,"#f4e0d2"],[0.07058823529411765,"#f2dfc9"],[0.08235294117647059,"#f0dfc1"],[0.09411764705882353,"#eedeb8"],[0.10588235294117647,"#ecddaf"],[0.11764705882352941,"#ebdda6"],[0.12941176470588237,"#e9dc9e"],[0.1411764705882353,"#e7db95"],[0.15294117647058825,"#e5db8c"],[0.16470588235294117,"#e3da83"],[0.17647058823529413,"#e4d77b"],[0.18823529411764706,"#e6d373"],[0.2,"#e8d06b"],[0.21176470588235294,"#eacc63"],[0.2235294117647059,"#ecc85b"],[0.23529411764705882,"#edc553"],[0.24705882352941178,"#efc14b"],[0.25882352941176473,"#f1bd44"],[0.27058823529411763,"#f3ba3c"],[0.2823529411764706,"#f4b634"],[0.29411764705882354,"#f6b22c"],[0.3058823529411765,"#f8af24"],[0.3176470588235294,"#faab1c"],[0.32941176470588235,"#fba714"],[0.3411764705882353,"#fca412"],[0.35294117647058826,"#fca213"],[0.36470588235294116,"#fc9f13"],[0.3764705882352941,"#fc9d14"],[0.38823529411764707,"#fc9a15"],[0.4,"#fc9816"],[0.4117647058823529,"#fc9617"],[0.4235294117647059,"#fb9318"],[0.43529411764705883,"#fb9119"],[0.4470588235294118,"#fb8e1a"],[0.4588235294117647,"#fb8c1b"],[0.47058823529411764,"#fb891c"],[0.4823529411764706,"#fb871d"],[0.49411764705882355,"#fb841e"],[0.5058823529411764,"#fb811f"],[0.5176470588235295,"#fb7d20"],[0.5294117647058824,"#fc7a21"],[0.5411764705882353,"#fc7622"],[0.5529411764705883,"#fc7223"],[0.5647058823529412,"#fd6f24"],[0.5764705882352941,"#fd6b25"],[0.5882352941176471,"#fd6726"],[0.6,"#fd6427"],[0.611764705882353,"#fe6028"],[0.6235294117647059,"#fe5c29"],[0.6352941176470588,"#fe592a"],[0.6470588235294118,"#ff552b"],[0.6588235294117647,"#ff512c"],[0.6705882352941176,"#ff4f2f"],[0.6823529411764706,"#ff5137"],[0.6941176470588235,"#fe523e"],[0.7058823529411765,"#fe5345"],[0.7176470588235294,"#fd544d"],[0.7294117647058823,"#fd5554"],[0.7411764705882353,"#fd575b"],[0.7529411764705882,"#fc5862"],[0.7647058823529411,"#fc596a"],[0.7764705882352941,"#fc5a71"],[0.788235294117647,"#fb5b78"],[0.8,"#fb5d7f"],[0.8117647058823529,"#fb5e87"],[0.8235294117647058,"#fa5f8e"],[0.8352941176470589,"#f75f93"],[0.8470588235294118,"#e75b8e"],[0.8588235294117647,"#d65789"],[0.8705882352941177,"#c55283"],[0.8823529411764706,"#b54e7e"],[0.8941176470588236,"#a44a79"],[0.9058823529411765,"#934573"],[0.9176470588235294,"#83416e"],[0.9294117647058824,"#723d69"],[0.9411764705882353,"#613963"],[0.9529411764705882,"#51345e"],[0.9647058823529412,"#403059"],[0.9764705882352941,"#2f2c54"],[0.9882352941176471,"#1f274e"],[1.0,"#0e2349"]],"showscale":false},"legend":{"tracegroupgap":0,"itemsizing":"constant"},"height":500,"width":600,"font":{"family":"Roboto","size":12,"color":"black"},"showlegend":false,"plot_bgcolor":"rgba(0, 0, 0, 0)","paper_bgcolor":"rgba(0, 0, 0, 0)"},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="f13dd364-56e1-4aae-bbec-2cb70969fcb9" class="plotly-graph-div" style="height:500px; width:600px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("f13dd364-56e1-4aae-bbec-2cb70969fcb9")) {                    Plotly.newPlot(                        "f13dd364-56e1-4aae-bbec-2cb70969fcb9",                        [{"customdata":[["Boston College",0,2],["Santa Clara",32,2],["Western Kentucky",31,2],["TCU",30,2],["Maccabi Tel Aviv",29,2],["Anadolu Efes",28,2],["Murray St.",27,2],["New Zealand Breakers",26,2],["St. Mary's",25,2],["Nebraska",24,2],["Metropolitans 92",23,2],["Georgetown",22,2],["Arizona St.",21,2],["Virginia Commonwealth",20,2],["Seton Hall",18,2],["Fresno St.",17,2],["Notre Dame",19,2],["Dayton",15,2],["Wisconsin",1,2],["Pepperdine",2,2],["New Mexico St.",3,2],["Kansas St.",4,2],["Illinois",16,2],["Xavier",6,2],["Utah St.",7,2],["UNLV",5,2],["Belmont",9,2],["Baskonia",10,2],["Oregon St.",11,2],["West Virginia",12,2],["South Carolina",13,2],["Washington St.",14,2],["Fenerbahce",8,2],["Missouri",41,3],["Pittsburgh",47,3],["Utah",46,3],["Georgia",44,3],["Wichita St.",43,3],["Oklahoma",42,3],["DePaul",40,3],["Providence",45,3],["Nevada",38,3],["San Diego St.",33,3],["Iowa",34,3],["Georgia Tech",39,3],["Oklahoma St.",36,3],["Stanford",37,3],["Real Madrid",35,3],["Houston",55,4],["Miami",58,4],["Overtime Elite",57,4],["North\u003cbr\u003eCarolina St.",56,4],["Connecticut",54,4],["Louisville",53,4],["Penn St.",52,4],["Syracuse",51,4],["Iowa St.",50,4],["Colorado",49,4],["Mega Basket",48,4],["Wake Forest",59,5],["Texas A&M",60,5],["Marquette",61,5],["Maryland",62,5],["Auburn",63,5],["Memphis",67,6],["Indiana",68,6],["Florida",65,6],["Vanderbilt",64,6],["Michigan St.",66,6],["Tennessee",69,7],["Alabama",70,7],["Washington",71,7],["Oregon",72,7],["Louisiana St.",73,8],["Ohio St.",74,8],["Florida St.",75,8],["Texas",81,9],["Virginia",80,9],["North\u003cbr\u003eCarolina",79,9],["NBA\u003cbr\u003eG League",78,9],["Arizona",76,9],["Baylor",77,9],["Michigan",82,10],["Southern\u003cbr\u003eCalifornia",83,10],["Gonzaga",84,10],["Villanova",85,10],["Kansas",86,12],["Arkansas",87,12],["UCLA",88,16],["Duke",89,24],["Kentucky",90,27]],"hovertemplate":"%{customdata[0]}\u003cbr\u003e%{customdata[2]}","hovertext":["Boston College","Santa Clara","Western Kentucky","TCU","Maccabi Tel Aviv","Anadolu Efes","Murray St.","New Zealand Breakers","St. Mary's","Nebraska","Metropolitans 92","Georgetown","Arizona St.","Virginia Commonwealth","Seton Hall","Fresno St.","Notre Dame","Dayton","Wisconsin","Pepperdine","New Mexico St.","Kansas St.","Illinois","Xavier","Utah St.","UNLV","Belmont","Baskonia","Oregon St.","West Virginia","South Carolina","Washington St.","Fenerbahce","Missouri","Pittsburgh","Utah","Georgia","Wichita St.","Oklahoma","DePaul","Providence","Nevada","San Diego St.","Iowa","Georgia Tech","Oklahoma St.","Stanford","Real Madrid","Houston","Miami","Overtime Elite","North\u003cbr\u003eCarolina St.","Connecticut","Louisville","Penn St.","Syracuse","Iowa St.","Colorado","Mega Basket","Wake Forest","Texas A&M","Marquette","Maryland","Auburn","Memphis","Indiana","Florida","Vanderbilt","Michigan St.","Tennessee","Alabama","Washington","Oregon","Louisiana St.","Ohio St.","Florida St.","Texas","Virginia","North\u003cbr\u003eCarolina","NBA\u003cbr\u003eG League","Arizona","Baylor","Michigan","Southern\u003cbr\u003eCalifornia","Gonzaga","Villanova","Kansas","Arkansas","UCLA","Duke","Kentucky"],"legendgroup":"","marker":{"color":[0,32,31,30,29,28,27,26,25,24,23,22,21,20,18,17,19,15,1,2,3,4,16,6,7,5,9,10,11,12,13,14,8,41,47,46,44,43,42,40,45,38,33,34,39,36,37,35,55,58,57,56,54,53,52,51,50,49,48,59,60,61,62,63,67,68,65,64,66,69,70,71,72,73,74,75,81,80,79,78,76,77,82,83,84,85,86,87,88,89,90],"coloraxis":"coloraxis","opacity":0.95,"size":[0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.009011346489756803,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.0135170197346352,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.018022692979513602,0.022528366224392006,0.022528366224392006,0.022528366224392006,0.022528366224392006,0.022528366224392006,0.027034039469270403,0.027034039469270403,0.027034039469270403,0.027034039469270403,0.027034039469270403,0.031539712714148814,0.031539712714148814,0.031539712714148814,0.031539712714148814,0.03604538595902721,0.03604538595902721,0.03604538595902721,0.0405510592039056,0.0405510592039056,0.0405510592039056,0.0405510592039056,0.0405510592039056,0.0405510592039056,0.045056732448784005,0.045056732448784005,0.045056732448784005,0.045056732448784005,0.0540680789385408,0.0540680789385408,0.07209077191805441,0.10813615787708161,0.12165317761171683],"sizemode":"area","sizeref":0.000024827179104432008,"symbol":"circle"},"mode":"markers+text","name":"","orientation":"v","showlegend":false,"text":["Boston College","Santa Clara","Western Kentucky","TCU","Maccabi Tel Aviv","Anadolu Efes","Murray St.","New Zealand Breakers","St. Mary's","Nebraska","Metropolitans 92","Georgetown","Arizona St.","Virginia Commonwealth","Seton Hall","Fresno St.","Notre Dame","Dayton","Wisconsin","Pepperdine","New Mexico St.","Kansas St.","Illinois","Xavier","Utah St.","UNLV","Belmont","Baskonia","Oregon St.","West Virginia","South Carolina","Washington St.","Fenerbahce","Missouri","Pittsburgh","Utah","Georgia","Wichita St.","Oklahoma","DePaul","Providence","Nevada","San Diego St.","Iowa","Georgia Tech","Oklahoma St.","Stanford","Real Madrid","Houston","Miami","Overtime Elite","North\u003cbr\u003eCarolina St.","Connecticut","Louisville","Penn St.","Syracuse","Iowa St.","Colorado","Mega Basket","Wake Forest","Texas A&M","Marquette","Maryland","Auburn","Memphis","Indiana","Florida","Vanderbilt","Michigan St.","Tennessee","Alabama","Washington","Oregon","Louisiana St.","Ohio St.","Florida St.","Texas","Virginia","North\u003cbr\u003eCarolina","NBA\u003cbr\u003eG League","Arizona","Baylor","Michigan","Southern\u003cbr\u003eCalifornia","Gonzaga","Villanova","Kansas","Arkansas","UCLA","Duke","Kentucky"],"x":[0.14153176763953956,-0.8437621243189182,-0.881465057662357,-0.8157129499673919,-0.7776118416432418,-0.5308267004331508,-0.1765176385643909,0.31157001916362076,0.42241788967418564,0.0440378404444293,0.2486368388924174,-0.7094888988457173,-0.38196461327083336,-0.09071409566942717,-0.2578517076073881,-0.4876832169287938,-0.6377675373832952,0.14576196203975658,-0.8934839163065208,-0.9284690505054526,-0.8128051731178337,-0.8836846238993981,0.014425819791527414,-0.5946240538789382,-0.7443670742239815,-0.17204816471242437,-0.34837263014742537,-0.45409123380538585,0.41836987659812075,0.35536579092608883,0.25286703329263444,0.5232190506242465,-0.055875484734923604,0.19364214685743683,0.031195998445128752,-0.1806434895175648,-0.7272871873995252,-0.46050755103033897,-0.774122539449822,-0.7199423068403321,-0.8209691231838627,-0.6603096714699057,-0.7743577249271794,-0.8383825154162534,-0.06990214541956724,-0.5903625612031017,-0.4116750817113821,-0.28644521388083,-0.080559639519084,-0.5870426254343721,-0.6364810647084034,-0.5874718443914994,-0.3725741610449161,-0.5681444567568739,-0.6864880068113387,-0.7069014665216117,-0.5232084616490005,-0.6330282021172967,-0.3075648628753587,-0.2947091952284237,0.06861302311039133,0.28571495635131333,-0.2123367180116985,-0.4623373393630962,-0.35625763534976185,-0.4923826045758613,-0.27066881113221125,-0.41985064590833193,-0.5080111758178594,-0.33479594325286977,-0.05818821952746697,-0.08274658471714184,-0.4151288247982328,-0.23669629492440966,-0.15881081034634884,-0.23858473877494762,0.050881858306134974,0.4192537547702582,0.15061344530132054,-0.12105423207032413,-0.02088463955843082,0.12843887391519185,0.17228998803611367,0.5760256906123746,0.2839113709929757,-0.010500283096393259,0.44402626388363886,0.7240505188118094,0.443428837198838,0.2623596343571402,0.6446707350371312],"xaxis":"x","y":[0.5871153616943795,0.13736146663674537,-0.08224145210430445,-0.3700278560418818,0.3538079007971989,0.5889171616053326,0.6789398560523973,0.4969964006359735,0.3817486802837098,0.6605936741474547,0.5856640126720071,0.4832490178458103,0.7041981025409418,0.743059702658116,0.7486418783686669,0.6869592063268602,0.5950212663285022,0.6941467036340431,0.23223689076549625,0.0717997448922869,0.4549762363661322,0.33890261426835583,0.7635340983496162,0.69306331105003,0.5845264367720044,0.8127617249743855,0.8059093672656785,0.7886704710515973,0.48878706728671356,0.5947488076539013,0.6926953546116704,0.3455170828418536,0.8443507382448011,0.4799630024136262,0.5421360580321128,0.5554065043124913,0.11224755034939203,0.4670488107097977,-0.13395898786787608,-0.44091582142878005,0.02041019977348283,0.3747201124040667,0.23470067832071373,-0.24833144758566317,0.6257397024515782,0.48570572326613615,0.5888100278247571,0.6329719552224345,0.4556114305527453,-0.3928168769556848,-0.166062853807026,0.09157138927486919,0.356398222356626,-0.5431167925404062,-0.023071556359764458,-0.3001828463980035,0.34038220269954844,0.23604222949841305,0.4932229151413684,0.21613872024518474,0.3965928101166012,0.3611965572344374,0.36412108998006926,0.19195583271831024,0.04970894294132354,-0.2534119993710188,-0.7361961038029561,-0.6231366969851522,-0.05702282862461546,-0.14205487314597912,0.26205086065527256,-0.7800048039346655,-0.43023343160731853,-0.3246873160901723,0.0807962208944449,-0.5389088009792901,0.011879043927340268,0.2146086629971127,0.21604765736910136,-0.136677992208171,-0.5753403720246661,-0.7466112115835425,-0.18742451997125573,0.04173759925442479,0.024492162659304283,-0.342200907994909,-0.7385574499897523,-0.1609020137191828,-0.1948844638608991,-0.47912186737350804,-0.47912186737350804],"yaxis":"y","type":"scatter","textfont":{"color":["black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","black","#F4F4F4","#F4F4F4","#F4F4F4","#F4F4F4","#F4F4F4","#F4F4F4","white","white","white","white","white","white","white","white","white"],"size":[4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,4.820170689061668,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,5.903479330660339,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,6.816750761424277,7.621359044109068,7.621359044109068,7.621359044109068,7.621359044109068,7.621359044109068,8.348780534609093,8.348780534609093,8.348780534609093,8.348780534609093,8.348780534609093,9.017713632119415,9.017713632119415,9.017713632119415,9.017713632119415,9.640341378123336,9.640341378123336,9.640341378123336,10.225126142136416,10.225126142136416,10.225126142136416,10.225126142136416,10.225126142136416,10.225126142136416,10.77822932389389,10.77822932389389,10.77822932389389,10.77822932389389,11.806958661320678,11.806958661320678,13.633501522848555,16.697561069218185,17.710437991981017]},"texttemplate":"\u003cb style='letter-spacing: 0.25px;text-transform:uppercase;font-family:Roboto Condensed;'\u003e%{customdata[0]}\u003c\u002fb\u003e\u003cbr\u003e%{customdata[2]}"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"x"},"visible":false},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"y"},"visible":false,"scaleanchor":"x","scaleratio":0.95},"coloraxis":{"colorbar":{"title":{"text":"rank"}},"colorscale":[[0.0,"#fde3fe"],[0.011111111111111112,"#fce3f7"],[0.022222222222222223,"#fae3ef"],[0.03333333333333333,"#f9e2e8"],[0.044444444444444446,"#f7e2e0"],[0.05555555555555555,"#f6e2d9"],[0.06666666666666667,"#f5e2d1"],[0.07777777777777778,"#f3e2ca"],[0.08888888888888889,"#f2e1c2"],[0.1,"#f1e1bb"],[0.1111111111111111,"#efe1b3"],[0.12222222222222222,"#eee1ac"],[0.13333333333333333,"#ece1a5"],[0.14444444444444443,"#ebe09d"],[0.15555555555555556,"#eae096"],[0.16666666666666666,"#e8e08e"],[0.17777777777777778,"#e9dd86"],[0.18888888888888888,"#ead97e"],[0.2,"#ecd576"],[0.2111111111111111,"#edd16e"],[0.2222222222222222,"#eece65"],[0.23333333333333334,"#f0ca5d"],[0.24444444444444444,"#f1c655"],[0.25555555555555554,"#f2c24d"],[0.26666666666666666,"#f4be45"],[0.2777777777777778,"#f5ba3d"],[0.28888888888888886,"#f6b734"],[0.3,"#f8b32c"],[0.3111111111111111,"#f9af24"],[0.32222222222222224,"#faab1c"],[0.3333333333333333,"#fca714"],[0.34444444444444444,"#fca412"],[0.35555555555555557,"#fca212"],[0.36666666666666664,"#fca013"],[0.37777777777777777,"#fc9e14"],[0.3888888888888889,"#fc9b15"],[0.4,"#fc9916"],[0.4111111111111111,"#fc9717"],[0.4222222222222222,"#fb9418"],[0.43333333333333335,"#fb9218"],[0.4444444444444444,"#fb9019"],[0.45555555555555555,"#fb8d1a"],[0.4666666666666667,"#fb8b1b"],[0.4777777777777778,"#fb891c"],[0.4888888888888889,"#fb861d"],[0.5,"#fb841e"],[0.5111111111111111,"#fb811e"],[0.5222222222222223,"#fb7e1f"],[0.5333333333333333,"#fc7a20"],[0.5444444444444444,"#fc7721"],[0.5555555555555556,"#fc7422"],[0.5666666666666667,"#fc7023"],[0.5777777777777777,"#fd6d24"],[0.5888888888888889,"#fd6925"],[0.6,"#fd6626"],[0.6111111111111112,"#fe6227"],[0.6222222222222222,"#fe5f28"],[0.6333333333333333,"#fe5c29"],[0.6444444444444445,"#fe582a"],[0.6555555555555556,"#ff552b"],[0.6666666666666666,"#ff512c"],[0.6777777777777778,"#ff4f2f"],[0.6888888888888889,"#ff5036"],[0.7,"#fe523d"],[0.7111111111111111,"#fe5344"],[0.7222222222222222,"#fe544a"],[0.7333333333333333,"#fd5551"],[0.7444444444444445,"#fd5658"],[0.7555555555555555,"#fd575f"],[0.7666666666666667,"#fc5866"],[0.7777777777777778,"#fc596c"],[0.7888888888888889,"#fc5b73"],[0.8,"#fb5c7a"],[0.8111111111111111,"#fb5d81"],[0.8222222222222222,"#fb5e88"],[0.8333333333333334,"#fa5f8e"],[0.8444444444444444,"#f86093"],[0.8555555555555555,"#e95d8f"],[0.8666666666666667,"#da5a8b"],[0.8777777777777778,"#cc5887"],[0.8888888888888888,"#bd5584"],[0.9,"#ae5280"],[0.9111111111111111,"#a0507c"],[0.9222222222222223,"#914d78"],[0.9333333333333333,"#824a74"],[0.9444444444444444,"#744870"],[0.9555555555555556,"#65456c"],[0.9666666666666667,"#574368"],[0.9777777777777777,"#484064"],[0.9888888888888889,"#393d60"],[1.0,"#2b3b5c"]],"showscale":false},"legend":{"tracegroupgap":0,"itemsizing":"constant"},"height":500,"width":600,"font":{"family":"Roboto","size":12,"color":"black"},"showlegend":false,"plot_bgcolor":"rgba(0, 0, 0, 0)","paper_bgcolor":"rgba(0, 0, 0, 0)"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('6cb7490a-a934-41a3-a820-dbf24b7ae30f');
+var gd = document.getElementById('f13dd364-56e1-4aae-bbec-2cb70969fcb9');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -825,6 +532,1027 @@ if (outputEl) {{
 
                         })                };                });            </script>        </div>
 </div>
+</div>
+<hr>
+</section>
+<section id="team-player-dashboard" class="level3">
+<h3 class="anchored" data-anchor-id="team-player-dashboard">Team Player Dashboard</h3>
+<div id="cell-21" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>script false</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.endpoints <span class="im">import</span> TeamPlayerDashboard</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>all_team_headlines <span class="op">=</span> [] <span class="co"># List to hold data frames of all team info</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>all_player_headlines <span class="op">=</span> []  <span class="co"># List to hold data frames of all player info</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each team ID and get the player dashboard data</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> team_id <span class="kw">in</span> all_nba_teams:</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    team_dashboard <span class="op">=</span> TeamPlayerDashboard(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        team_id<span class="op">=</span>team_id,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        season<span class="op">=</span><span class="st">"2023-24"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        league_id_nullable<span class="op">=</span><span class="st">'00'</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    all_team_headlines.append(team_dashboard.get_data_frames()[<span class="dv">0</span>])</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    all_player_headlines.append(team_dashboard.get_data_frames()[<span class="dv">1</span>])</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all individual team data frames into a single data frame</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>team_info_df <span class="op">=</span> pd.concat(all_team_headlines, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>team_players_info_df <span class="op">=</span> pd.concat(all_player_headlines, ignore_index<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Couldn't find program: 'false'</code></pre>
+</div>
+</div>
+<div id="cell-23" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with previous dataset all_players_info_df on PLAYER_ID</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>merged_df <span class="op">=</span> pd.merge(all_players_info_df, team_players_info_df, on<span class="op">=</span><span class="st">'PLAYER_ID'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-24" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">TEAM_ID</th>
+<th data-quarto-table-cell-role="th">SEASON</th>
+<th data-quarto-table-cell-role="th">PLAYER_ID</th>
+<th data-quarto-table-cell-role="th">PLAYER</th>
+<th data-quarto-table-cell-role="th">GP</th>
+<th data-quarto-table-cell-role="th">W</th>
+<th data-quarto-table-cell-role="th">L</th>
+<th data-quarto-table-cell-role="th">MIN</th>
+<th data-quarto-table-cell-role="th">FGM</th>
+<th data-quarto-table-cell-role="th">FGA</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">PLUS_MINUS</th>
+<th data-quarto-table-cell-role="th">NBA_FANTASY_PTS</th>
+<th data-quarto-table-cell-role="th">POSITION</th>
+<th data-quarto-table-cell-role="th">HEIGHT</th>
+<th data-quarto-table-cell-role="th">WEIGHT</th>
+<th data-quarto-table-cell-role="th">BIRTH_DATE</th>
+<th data-quarto-table-cell-role="th">AGE</th>
+<th data-quarto-table-cell-role="th">EXP</th>
+<th data-quarto-table-cell-role="th">SCHOOL</th>
+<th data-quarto-table-cell-role="th">HOW_ACQUIRED</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>1630552</td>
+<td>Jalen Johnson</td>
+<td>56</td>
+<td>27</td>
+<td>29</td>
+<td>1888.866667</td>
+<td>359</td>
+<td>702</td>
+<td>...</td>
+<td>-76</td>
+<td>2027.1</td>
+<td>F</td>
+<td>6-8</td>
+<td>219</td>
+<td>DEC 18, 2001</td>
+<td>22.0</td>
+<td>2</td>
+<td>Duke</td>
+<td>#20 Pick in 2021 Draft</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>1630235</td>
+<td>Trent Forrest</td>
+<td>38</td>
+<td>18</td>
+<td>20</td>
+<td>413.761667</td>
+<td>34</td>
+<td>90</td>
+<td>...</td>
+<td>-94</td>
+<td>304.2</td>
+<td>G</td>
+<td>6-4</td>
+<td>210</td>
+<td>JUN 12, 1998</td>
+<td>25.0</td>
+<td>3</td>
+<td>Florida State</td>
+<td>Signed on 08/08/22</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>1641754</td>
+<td>Seth Lundy</td>
+<td>9</td>
+<td>2</td>
+<td>7</td>
+<td>51.983333</td>
+<td>4</td>
+<td>17</td>
+<td>...</td>
+<td>-13</td>
+<td>21.4</td>
+<td>G-F</td>
+<td>6-4</td>
+<td>220</td>
+<td>APR 02, 2000</td>
+<td>24.0</td>
+<td>R</td>
+<td>Penn State</td>
+<td>#46 Pick in 2023 Draft</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>1641723</td>
+<td>Kobe Bufkin</td>
+<td>17</td>
+<td>8</td>
+<td>9</td>
+<td>196.003333</td>
+<td>34</td>
+<td>92</td>
+<td>...</td>
+<td>-35</td>
+<td>187.1</td>
+<td>G</td>
+<td>6-5</td>
+<td>195</td>
+<td>SEP 21, 2003</td>
+<td>20.0</td>
+<td>R</td>
+<td>Michigan</td>
+<td>#15 Pick in 2023 Draft</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1610612737</td>
+<td>2023</td>
+<td>1627749</td>
+<td>Dejounte Murray</td>
+<td>78</td>
+<td>34</td>
+<td>44</td>
+<td>2783.343333</td>
+<td>672</td>
+<td>1463</td>
+<td>...</td>
+<td>-154</td>
+<td>3209.2</td>
+<td>G</td>
+<td>6-5</td>
+<td>180</td>
+<td>SEP 19, 1996</td>
+<td>27.0</td>
+<td>6</td>
+<td>Washington</td>
+<td>Traded from SAS on 06/30/22</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 33 columns</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="player-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="player-statistics">Player Statistics</h2>
+<div id="cell-26" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>merged_df2 <span class="op">=</span> pd.merge(merged_df, team_info_df, on<span class="op">=</span><span class="st">'TEAM_ID'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="points-per-game" class="level3">
+<h3 class="anchored" data-anchor-id="points-per-game">Points Per Game</h3>
+<div id="cell-29" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate points per game</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>merged_df2[<span class="st">'PPG'</span>] <span class="op">=</span> merged_df2[<span class="st">'PTS'</span>] <span class="op">/</span> merged_df2[<span class="st">'GP'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="player-impact-estimate-pie-score" class="level3">
+<h3 class="anchored" data-anchor-id="player-impact-estimate-pie-score">Player Impact Estimate (PIE) score</h3>
+<p>(PTS + FGM + FTM - FGA - FTA + DREB + (.5 * OREB) + AST + STL + (.5 * BLK) - PF - TO) / (GmPTS + GmFGM + GmFTM - GmFGA - GmFTA + GmDREB + (.5 * GmOREB) + GmAST + GmSTL + (.5 * GmBLK) - GmPF - GmTO)</p>
+<p>The Player Impact Estimate (PIE) is a comprehensive metric that estimates a player’s overall statistical contribution against the total statistics in games they play. The NBA’s official definition of PIE is:</p>
+<p>$ = $</p>
+<div class="mycode">
+<ol type="1">
+<li><strong>Player’s Stats</strong>: Include points, field goals made, field goals attempted, free throws made, free throws attempted, offensive rebounds, defensive rebounds, assists, steals, blocks, turnovers, and personal fouls.</li>
+<li><strong>Team’s Stats</strong>: Sum of all players’ stats on the team.</li>
+<li><strong>Opponent’s Stats</strong>: Sum of all players’ stats on the opponent team.</li>
+<li><strong>Team’s Total Stats</strong>: Total of all the team stats, including points, field goals, free throws, rebounds, assists, steals, blocks, turnovers, and fouls.</li>
+<li><strong>Opponent’s Total Stats</strong>: Same as above, but for the opponent team.</li>
+</ol>
+</div>
+<p>The formula is: <span class="math inline">\(\text{PIE} = \frac{\text{PTS} + \text{FGM} + \text{FTM} - \text{FGA} - \text{FTA} + \text{OREB} + \text{DREB} + \text{AST} + \text{STL} + \text{BLK} - \text{TO} - \text{PF}}{\text{Team's Total Stats} + \text{Opponent's Total Stats}}\)</span></p>
+<div id="cell-33" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate player's contribution</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>player_contrib <span class="op">=</span> (merged_df2[<span class="st">"PTS"</span>] <span class="op">+</span> merged_df2[<span class="st">"FGM"</span>] <span class="op">+</span> merged_df2[<span class="st">"FTM"</span>] <span class="op">-</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  merged_df2[<span class="st">"FGA"</span>] <span class="op">-</span> merged_df2[<span class="st">"FTA"</span>] <span class="op">+</span> merged_df2[<span class="st">"OREB"</span>] <span class="op">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                  merged_df2[<span class="st">"DREB"</span>] <span class="op">+</span> merged_df2[<span class="st">"AST"</span>] <span class="op">+</span> merged_df2[<span class="st">"STL"</span>] <span class="op">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                  merged_df2[<span class="st">"BLK"</span>] <span class="op">-</span> merged_df2[<span class="st">'TOV'</span>] <span class="op">-</span> merged_df2[<span class="st">"PF"</span>])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate team and opponent total stats</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>team_total_stats <span class="op">=</span> (merged_df2[<span class="st">'PTS_TEAM'</span>] <span class="op">+</span> merged_df2[<span class="st">'FGM_TEAM'</span>] <span class="op">+</span> merged_df2[<span class="st">'FTM_TEAM'</span>] <span class="op">-</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                    merged_df2[<span class="st">'FGA_TEAM'</span>] <span class="op">-</span> merged_df2[<span class="st">'FTA_TEAM'</span>] <span class="op">+</span> merged_df2[<span class="st">'OREB_TEAM'</span>] <span class="op">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                    merged_df2[<span class="st">'DREB_TEAM'</span>] <span class="op">+</span> merged_df2[<span class="st">'AST_TEAM'</span>] <span class="op">+</span> merged_df2[<span class="st">'STL_TEAM'</span>] <span class="op">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                    merged_df2[<span class="st">'BLK_TEAM'</span>] <span class="op">-</span> merged_df2[<span class="st">'TOV_TEAM'</span>] <span class="op">-</span> merged_df2[<span class="st">'PF_TEAM'</span>])</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate PIE</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>merged_df2[<span class="st">'PIE'</span>] <span class="op">=</span> (player_contrib<span class="op">/</span>team_total_stats)<span class="op">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="per" class="level3">
+<h3 class="anchored" data-anchor-id="per">PER</h3>
+<p>Functions for Calculating PER Variants:</p>
+<ul>
+<li>calculate_uPER: Calculates the unadjusted Player Efficiency Rating (uPER) using basic player statistics such as points, rebounds, assists, turnovers, and games played.</li>
+<li>calculate_aPER: Adjusts uPER based on the team’s pace relative to the league average, yielding the adjusted PER (aPER).</li>
+<li>calculate_nPER: Normalizes aPER so that the league average is set to a constant value of 15, resulting in the normalized PER (nPER).</li>
+</ul>
+<div id="cell-35" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nba_api.stats.endpoints <span class="im">import</span> leaguedashteamstats, playercareerstats</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetch_pace_data(season):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    team_stats <span class="op">=</span> leaguedashteamstats.LeagueDashTeamStats(season<span class="op">=</span>season, measure_type_detailed_defense<span class="op">=</span><span class="st">'Advanced'</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    team_data <span class="op">=</span> team_stats.get_data_frames()[<span class="dv">0</span>]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    pace_data <span class="op">=</span> team_data[[<span class="st">'TEAM_ID'</span>, <span class="st">'PACE'</span>]]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    league_pace <span class="op">=</span> pace_data[<span class="st">'PACE'</span>].mean()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pace_data, league_pace</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch player stats and team pace data</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>team_pace_data, league_pace <span class="op">=</span> fetch_pace_data(season <span class="op">=</span> <span class="st">'2023-24'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_PER(df, league_pace):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the basic components of PER</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'REB'</span>] <span class="op">=</span> df[<span class="st">'OREB'</span>] <span class="op">+</span> df[<span class="st">'DREB'</span>]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'PER'</span>] <span class="op">=</span> (df[<span class="st">'PTS'</span>] <span class="op">+</span> df[<span class="st">'REB'</span>] <span class="op">+</span> df[<span class="st">'AST'</span>] <span class="op">+</span> df[<span class="st">'STL'</span>] <span class="op">+</span> df[<span class="st">'BLK'</span>] <span class="op">-</span> (df[<span class="st">'FGA'</span>] <span class="op">-</span> df[<span class="st">'FGM'</span>]) <span class="op">-</span> (df[<span class="st">'FTA'</span>] <span class="op">-</span> df[<span class="st">'FTM'</span>]) <span class="op">-</span> df[<span class="st">'TOV'</span>])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'uPER'</span>] <span class="op">=</span> (df[<span class="st">'PTS'</span>] <span class="op">+</span> df[<span class="st">'REB'</span>] <span class="op">+</span> df[<span class="st">'AST'</span>] <span class="op">-</span> df[<span class="st">'TOV'</span>]) <span class="op">/</span> df[<span class="st">'GP'</span>]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'aPER'</span>] <span class="op">=</span> df[<span class="st">'uPER'</span>] <span class="op">*</span> (league_pace <span class="op">/</span> df[<span class="st">'PACE'</span>])</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    league_average_aPER <span class="op">=</span> df[<span class="st">'aPER'</span>].mean(skipna<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'nPER'</span>] <span class="op">=</span> df[<span class="st">'aPER'</span>] <span class="op">*</span> (<span class="dv">15</span> <span class="op">/</span> league_average_aPER)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to calculate PER and uPER</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>merged_df3 <span class="op">=</span> pd.merge(merged_df2, team_pace_data, on<span class="op">=</span><span class="st">'TEAM_ID'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>merged_df3 <span class="op">=</span> calculate_PER(merged_df3, league_pace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-37" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="22">
+<div class="cell-output cell-output-stdout">
+<pre><code>Top Players Based on uPER:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">index</th>
+<th data-quarto-table-cell-role="th">PLAYER</th>
+<th data-quarto-table-cell-role="th">SCHOOL</th>
+<th data-quarto-table-cell-role="th">PIE</th>
+<th data-quarto-table-cell-role="th">PPG</th>
+<th data-quarto-table-cell-role="th">PER</th>
+<th data-quarto-table-cell-role="th">uPER</th>
+<th data-quarto-table-cell-role="th">aPER</th>
+<th data-quarto-table-cell-role="th">nPER</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>102</td>
+<td>Luka Doncic</td>
+<td>Real Madrid</td>
+<td>25.667828</td>
+<td>33.857143</td>
+<td>2580</td>
+<td>48.871429</td>
+<td>48.167181</td>
+<td>53.186126</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>321</td>
+<td>Joel Embiid</td>
+<td>Kansas</td>
+<td>15.146262</td>
+<td>34.692308</td>
+<td>1510</td>
+<td>47.487179</td>
+<td>47.961390</td>
+<td>52.958892</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>114</td>
+<td>Nikola Jokic</td>
+<td>Mega Basket</td>
+<td>28.636135</td>
+<td>26.392405</td>
+<td>3039</td>
+<td>44.708861</td>
+<td>45.498291</td>
+<td>50.239141</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>220</td>
+<td>Giannis Antetokounmpo</td>
+<td>Filathlitikos</td>
+<td>25.131051</td>
+<td>30.438356</td>
+<td>2655</td>
+<td>45.054795</td>
+<td>44.445308</td>
+<td>49.076439</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>398</td>
+<td>Shai Gilgeous-Alexander</td>
+<td>Kentucky</td>
+<td>21.912429</td>
+<td>30.053333</td>
+<td>2416</td>
+<td>39.626667</td>
+<td>38.958822</td>
+<td>43.018270</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>175</td>
+<td>Anthony Davis</td>
+<td>Kentucky</td>
+<td>23.352704</td>
+<td>24.684211</td>
+<td>2548</td>
+<td>38.736842</td>
+<td>37.884896</td>
+<td>41.832443</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>266</td>
+<td>Jalen Brunson</td>
+<td>Villanova</td>
+<td>20.116650</td>
+<td>28.727273</td>
+<td>1972</td>
+<td>36.662338</td>
+<td>37.881232</td>
+<td>41.828397</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>369</td>
+<td>Domantas Sabonis</td>
+<td>Gonzaga</td>
+<td>25.818452</td>
+<td>19.426829</td>
+<td>2679</td>
+<td>37.975610</td>
+<td>37.853568</td>
+<td>41.797850</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>18</td>
+<td>Jayson Tatum</td>
+<td>Duke</td>
+<td>17.978804</td>
+<td>26.851351</td>
+<td>2045</td>
+<td>37.351351</td>
+<td>37.797499</td>
+<td>41.735939</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>186</td>
+<td>LeBron James</td>
+<td>St. Vincent-St. Mary HS (OH)</td>
+<td>20.171378</td>
+<td>25.661972</td>
+<td>2126</td>
+<td>37.802817</td>
+<td>36.971413</td>
+<td>40.823777</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>328</td>
+<td>Devin Booker</td>
+<td>Kentucky</td>
+<td>16.401955</td>
+<td>27.073529</td>
+<td>1817</td>
+<td>35.926471</td>
+<td>35.981026</td>
+<td>39.730192</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>458</td>
+<td>Ja Morant</td>
+<td>Murray State</td>
+<td>2.635812</td>
+<td>25.111111</td>
+<td>232</td>
+<td>35.777778</td>
+<td>35.948304</td>
+<td>39.694060</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>271</td>
+<td>Julius Randle</td>
+<td>Kentucky</td>
+<td>11.004732</td>
+<td>23.956522</td>
+<td>1125</td>
+<td>34.673913</td>
+<td>35.826699</td>
+<td>39.559785</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>342</td>
+<td>Kevin Durant</td>
+<td>Texas</td>
+<td>19.771941</td>
+<td>27.093333</td>
+<td>2075</td>
+<td>35.480000</td>
+<td>35.533877</td>
+<td>39.236451</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>52</td>
+<td>Donovan Mitchell</td>
+<td>Louisville</td>
+<td>13.884754</td>
+<td>26.600000</td>
+<td>1424</td>
+<td>34.945455</td>
+<td>35.493275</td>
+<td>39.191618</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>311</td>
+<td>Tyrese Maxey</td>
+<td>Kentucky</td>
+<td>16.370531</td>
+<td>25.942857</td>
+<td>1662</td>
+<td>34.157143</td>
+<td>34.498239</td>
+<td>38.092901</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>5</td>
+<td>Trae Young</td>
+<td>Oklahoma</td>
+<td>12.963942</td>
+<td>25.722222</td>
+<td>1335</td>
+<td>34.925926</td>
+<td>34.340710</td>
+<td>37.918958</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>365</td>
+<td>De'Aaron Fox</td>
+<td>Kentucky</td>
+<td>16.772959</td>
+<td>26.567568</td>
+<td>1771</td>
+<td>34.189189</td>
+<td>34.079315</td>
+<td>37.630327</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>227</td>
+<td>Anthony Edwards</td>
+<td>Georgia</td>
+<td>18.218366</td>
+<td>25.936709</td>
+<td>1863</td>
+<td>33.455696</td>
+<td>33.921090</td>
+<td>37.455615</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>505</td>
+<td>LaMelo Ball</td>
+<td>Illawarra</td>
+<td>5.380785</td>
+<td>23.909091</td>
+<td>522</td>
+<td>33.272727</td>
+<td>33.725230</td>
+<td>37.239346</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>94</td>
+<td>Kyrie Irving</td>
+<td>Duke</td>
+<td>14.475768</td>
+<td>25.637931</td>
+<td>1483</td>
+<td>33.965517</td>
+<td>33.476067</td>
+<td>36.964221</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>135</td>
+<td>Stephen Curry</td>
+<td>Davidson</td>
+<td>16.374987</td>
+<td>26.432432</td>
+<td>1717</td>
+<td>33.175676</td>
+<td>32.923424</td>
+<td>36.353993</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>152</td>
+<td>Alperen Sengun</td>
+<td>Besiktas</td>
+<td>15.868397</td>
+<td>21.126984</td>
+<td>1629</td>
+<td>32.857143</td>
+<td>32.712086</td>
+<td>36.120634</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>76</td>
+<td>DeMar DeRozan</td>
+<td>Southern California</td>
+<td>18.742429</td>
+<td>24.012658</td>
+<td>1863</td>
+<td>31.936709</td>
+<td>32.664899</td>
+<td>36.068530</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>208</td>
+<td>Damian Lillard</td>
+<td>Weber State</td>
+<td>16.332614</td>
+<td>24.315068</td>
+<td>1723</td>
+<td>33.013699</td>
+<td>32.567100</td>
+<td>35.960541</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>280</td>
+<td>Paolo Banchero</td>
+<td>Duke</td>
+<td>18.252964</td>
+<td>22.550000</td>
+<td>1739</td>
+<td>31.775000</td>
+<td>32.355981</td>
+<td>35.727423</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>157</td>
+<td>Kawhi Leonard</td>
+<td>San Diego State</td>
+<td>17.097043</td>
+<td>23.720588</td>
+<td>1739</td>
+<td>31.676471</td>
+<td>32.071200</td>
+<td>35.412969</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">27</td>
+<td>197</td>
+<td>Bam Adebayo</td>
+<td>Kentucky</td>
+<td>18.114973</td>
+<td>19.253521</td>
+<td>1785</td>
+<td>31.267606</td>
+<td>32.000346</td>
+<td>35.334732</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">28</td>
+<td>293</td>
+<td>Tyrese Haliburton</td>
+<td>Iowa State</td>
+<td>16.903062</td>
+<td>20.130435</td>
+<td>1803</td>
+<td>32.652174</td>
+<td>31.690230</td>
+<td>34.992303</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29</td>
+<td>444</td>
+<td>Lauri Markkanen</td>
+<td>Arizona</td>
+<td>13.263023</td>
+<td>23.236364</td>
+<td>1345</td>
+<td>32.000000</td>
+<td>31.645828</td>
+<td>34.943273</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>381</td>
+<td>Victor Wembanyama</td>
+<td>Metropolitans 92</td>
+<td>18.908236</td>
+<td>21.436620</td>
+<td>1923</td>
+<td>32.267606</td>
+<td>31.427739</td>
+<td>34.702460</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">31</td>
+<td>421</td>
+<td>Scottie Barnes</td>
+<td>Florida State</td>
+<td>15.161184</td>
+<td>19.850000</td>
+<td>1496</td>
+<td>31.383333</td>
+<td>31.144710</td>
+<td>34.389940</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>4</td>
+<td>Dejounte Murray</td>
+<td>Washington</td>
+<td>17.151316</td>
+<td>22.474359</td>
+<td>1760</td>
+<td>31.666667</td>
+<td>31.136063</td>
+<td>34.380392</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33</td>
+<td>462</td>
+<td>Desmond Bane</td>
+<td>TCU</td>
+<td>9.998763</td>
+<td>23.738095</td>
+<td>928</td>
+<td>30.952381</td>
+<td>31.099908</td>
+<td>34.340469</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34</td>
+<td>54</td>
+<td>Zion Williamson</td>
+<td>Duke</td>
+<td>15.712950</td>
+<td>22.871429</td>
+<td>1672</td>
+<td>30.942857</td>
+<td>31.084039</td>
+<td>34.322947</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">35</td>
+<td>75</td>
+<td>Nikola Vucevic</td>
+<td>Southern California</td>
+<td>17.365929</td>
+<td>18.026316</td>
+<td>1767</td>
+<td>30.328947</td>
+<td>31.020479</td>
+<td>34.252764</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">36</td>
+<td>238</td>
+<td>Karl-Anthony Towns</td>
+<td>Kentucky</td>
+<td>13.192975</td>
+<td>21.758065</td>
+<td>1451</td>
+<td>30.258065</td>
+<td>30.678977</td>
+<td>33.875679</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">37</td>
+<td>487</td>
+<td>Cade Cunningham</td>
+<td>Oklahoma State</td>
+<td>13.998805</td>
+<td>22.661290</td>
+<td>1324</td>
+<td>31.048387</td>
+<td>30.646669</td>
+<td>33.840004</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">38</td>
+<td>309</td>
+<td>Pascal Siakam</td>
+<td>New Mexico State</td>
+<td>8.617823</td>
+<td>21.268293</td>
+<td>987</td>
+<td>31.341463</td>
+<td>30.418134</td>
+<td>33.587656</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">39</td>
+<td>118</td>
+<td>Jamal Murray</td>
+<td>Kentucky</td>
+<td>12.118772</td>
+<td>21.186441</td>
+<td>1308</td>
+<td>29.677966</td>
+<td>30.201994</td>
+<td>33.348994</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40</td>
+<td>504</td>
+<td>Miles Bridges</td>
+<td>Michigan State</td>
+<td>16.263816</td>
+<td>21.000000</td>
+<td>1457</td>
+<td>29.666667</td>
+<td>30.070128</td>
+<td>33.203388</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">41</td>
+<td>20</td>
+<td>Jaylen Brown</td>
+<td>California</td>
+<td>12.272899</td>
+<td>23.000000</td>
+<td>1482</td>
+<td>29.714286</td>
+<td>30.069211</td>
+<td>33.202376</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">42</td>
+<td>202</td>
+<td>Jimmy Butler</td>
+<td>Marquette</td>
+<td>14.772727</td>
+<td>20.766667</td>
+<td>1394</td>
+<td>29.333333</td>
+<td>30.020745</td>
+<td>33.148860</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">43</td>
+<td>163</td>
+<td>Paul George</td>
+<td>Fresno State</td>
+<td>14.941691</td>
+<td>22.581081</td>
+<td>1637</td>
+<td>29.297297</td>
+<td>29.662379</td>
+<td>32.753153</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">44</td>
+<td>423</td>
+<td>RJ Barrett</td>
+<td>Duke</td>
+<td>6.788426</td>
+<td>21.750000</td>
+<td>701</td>
+<td>29.718750</td>
+<td>29.492783</td>
+<td>32.565885</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<hr>
+<div id="cell-39" class="cell" data-tags="[&quot;hide-code&quot;]" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">SCHOOL</th>
+<th data-quarto-table-cell-role="th">COUNT</th>
+<th data-quarto-table-cell-role="th">AVG_PER</th>
+<th data-quarto-table-cell-role="th">PER_WEIGHTED</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Kentucky</td>
+<td>27</td>
+<td>22.202</td>
+<td>95.376</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Duke</td>
+<td>24</td>
+<td>19.723</td>
+<td>82.404</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Gonzaga</td>
+<td>10</td>
+<td>20.362</td>
+<td>67.247</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>Villanova</td>
+<td>10</td>
+<td>18.732</td>
+<td>61.864</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">37</td>
+<td>Mega Basket</td>
+<td>4</td>
+<td>24.955</td>
+<td>59.550</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">44</td>
+<td>Oklahoma</td>
+<td>3</td>
+<td>27.301</td>
+<td>57.294</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>Arizona</td>
+<td>9</td>
+<td>17.865</td>
+<td>57.118</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">47</td>
+<td>Georgia</td>
+<td>3</td>
+<td>26.130</td>
+<td>54.837</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>Southern California</td>
+<td>10</td>
+<td>16.526</td>
+<td>54.579</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>Florida State</td>
+<td>8</td>
+<td>17.598</td>
+<td>54.192</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">23</td>
+<td>Michigan State</td>
+<td>6</td>
+<td>19.399</td>
+<td>54.157</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>UCLA</td>
+<td>14</td>
+<td>14.763</td>
+<td>53.723</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">39</td>
+<td>Louisville</td>
+<td>4</td>
+<td>21.886</td>
+<td>52.226</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Michigan</td>
+<td>10</td>
+<td>15.707</td>
+<td>51.874</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>Louisiana State</td>
+<td>8</td>
+<td>16.674</td>
+<td>51.347</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Kansas</td>
+<td>12</td>
+<td>14.590</td>
+<td>50.845</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40</td>
+<td>Colorado</td>
+<td>4</td>
+<td>21.014</td>
+<td>50.146</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">16</td>
+<td>Texas</td>
+<td>8</td>
+<td>16.195</td>
+<td>49.872</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">151</td>
+<td>Filathlitikos</td>
+<td>1</td>
+<td>49.076</td>
+<td>49.076</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49</td>
+<td>Real Madrid</td>
+<td>3</td>
+<td>22.667</td>
+<td>47.569</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-40" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#merged_df.to_csv("data/merged_df.csv", index=None)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
