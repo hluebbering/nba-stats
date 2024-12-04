@@ -1,0 +1,67 @@
+/* FONT IMPORT */
+@font-face {
+    font-family: 'Lazy Crunch';
+    src: url('fonts/LazyCrunchRegular.woff2') format('woff2'),
+        url('fonts/LazyCrunchRegular.woff') format('woff'),
+        url('fonts/LazyCrunchRegular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Americanos';
+    src: url('fonts/americanos.woff2') format('woff2'),
+        url('fonts/americanos.woff') format('woff'),
+        url('fonts/americanos.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+body {
+    font-family: 'Americanos', sans-serif;
+    font-family:'Roboto';
+    font-family: 'Segoe UI Variable Display';
+    font-family: 'Proxima Nova';
+    font-size: 16px;
+    line-height: 1.1;
+    color: #212529;
+}
+
+
+
+strong {
+    font-family: 'Lazy Crunch', sans-serif;
+}
+
+h2 {
+    font-family: 'Mencken Std';
+
+}
+
+h3 {
+    font-family: 'Juicy Advice Outline';
+
+}
+
+h4 {
+    font-family: 'Notes from Paris';
+
+}
+
+
+
+.mycode {
+    font-size: 15px; 
+    font-weight: 400; 
+    font-family: 'unibody-8-new', sans-serif;
+}
+
+.mycode strong {
+    font-size:18px;
+    font-weight:600;
+    font-family:proxima-nova,sans-serif;
+}
