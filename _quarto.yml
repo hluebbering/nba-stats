@@ -18,9 +18,9 @@ website:
     right:
       - index.ipynb
       - icon: github
-        href: https://github.com/
+        href: draft.ipynb
       - icon: twitter
-        href: https://twitter.com
+        href: main2.ipynb
 format:
   html:
     #theme: cosmo
