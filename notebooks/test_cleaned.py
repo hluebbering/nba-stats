@@ -514,8 +514,35 @@ def predict_upcoming_points(player_name, season='2024-25', feature_cols=DEFAULT_
 # =============================================================================
 
 player_names = [
-    "LeBron James", "Kevin Durant", "Stephen Curry", "Giannis Antetokounmpo", "Luka Dončić", "Joel Embiid", "Jayson Tatum", "Nikola Jokić", "Shai Gilgeous-Alexander", "Karl-Anthony Towns", "Victor Wembanyama", "Damian Lillard", "Donovan Mitchell", "Anthony Davis", "Domantas Sabonis", "James Harden", "Kyrie Irving", "Anthony Edwards", "Jimmy Butler", "De'Aaron Fox", "Jalen Brunson", "Bronny James",
-    "Tyrese Maxey", "Trae Young", "Pascal Siakam"
+    "LeBron James",
+    "Kevin Durant",
+    "Stephen Curry",
+    "Giannis Antetokounmpo",
+    "Luka Dončić",  #"Joel Embiid",
+    "Jayson Tatum",
+    "Nikola Jokić",
+    "Shai Gilgeous-Alexander",
+    "Karl-Anthony Towns",  #"Victor Wembanyama", 
+    "Damian Lillard",
+    "Donovan Mitchell",  #"Anthony Davis", "Domantas Sabonis",
+    "James Harden",  # "Kyrie Irving", 
+    "Anthony Edwards",
+    "Jimmy Butler",
+    "De'Aaron Fox",
+    "Jalen Brunson",  #"Bronny James",
+    "Trae Young",
+    "Pascal Siakam",
+    "Jalen Green",
+    "Darius Garland",
+    "Zion Williamson",
+    "Jalen Williams",
+    "Jaylen Brown",
+    "Paolo Bunchero",
+    "Tyrese Maxey",
+    "Norman Powell",
+    "Alperen Şengün",
+    "Ja Morant",
+    "Jaren Jackson Jr.",
 ]
 
 season = '2024-25'
@@ -718,13 +745,6 @@ df_injury.to_csv(csv_file, index=False)
 print(f"Saved injury data to {csv_file}")
 
 # %%
-df_injury[60:85]
-
-# %%
-
-# %%
-from lib.cleanup_script import remove_markdown_blocks_and_reformat
-
-remove_markdown_blocks_and_reformat("notebooks/test.py", "notebooks/test_cleaned.py")
+df_injury.head()
 
 # %%

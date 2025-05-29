@@ -50,6 +50,8 @@ from catboost import CatBoostRegressor
 
 warnings.filterwarnings("ignore")
 
+
+
 # %% [markdown]
 # Developing a machine learning model to predict NBA player performance metrics like points involves several steps:
 # 
@@ -563,13 +565,18 @@ def predict_upcoming_points(player_name, season='2024-25', feature_cols=DEFAULT_
 
 player_names = [
     "LeBron James", "Kevin Durant", "Stephen Curry",
-    "Giannis Antetokounmpo", "Luka Dončić", "Joel Embiid",
+    "Giannis Antetokounmpo", "Luka Dončić", #"Joel Embiid",
     "Jayson Tatum", "Nikola Jokić", "Shai Gilgeous-Alexander",
-    "Karl-Anthony Towns", "Victor Wembanyama", "Damian Lillard",
-    "Donovan Mitchell", "Anthony Davis", "Domantas Sabonis",
-    "James Harden", "Kyrie Irving", "Anthony Edwards", "Jimmy Butler",
-    "De'Aaron Fox", "Jalen Brunson", "Bronny James", "Tyrese Maxey", 
-    "Trae Young", "Pascal Siakam"]
+    "Karl-Anthony Towns", #"Victor Wembanyama", 
+    "Damian Lillard", "Donovan Mitchell", #"Anthony Davis", "Domantas Sabonis",
+    "James Harden", # "Kyrie Irving", 
+    "Anthony Edwards", "Jimmy Butler",
+    "De'Aaron Fox", "Jalen Brunson", #"Bronny James",
+    "Trae Young", "Pascal Siakam", "Jalen Green",
+    "Darius Garland", "Zion Williamson", "Jalen Williams",
+    "Jaylen Brown",  "Paolo Bunchero", "Tyrese Maxey", 
+    "Norman Powell", "Alperen Şengün", "Ja Morant", "Jaren Jackson Jr.",
+    ]
 
 season = '2024-25'
 opponent_stats = get_opponent_stats(season)
@@ -867,7 +874,7 @@ print(f"Saved injury data to {csv_file}")
 
 
 # %%
-df_injury[60:85]
+df_injury.head()
 
 # %% [markdown]
 # Star Player Identification
@@ -878,6 +885,9 @@ df_injury[60:85]
 # 
 # Often, you’ll first build a minutes model (that uses IS_OUT, TEAM_HAS_STAR_OUT) and outputs MIN_PROJ. Then you feed MIN_PROJ + other features into your points model.
 # The partial historical injuries help that minutes model learn “When star is out, player X’s minutes jump by 5.”
+
+# %% [markdown]
+# ------
 
 # %% [markdown]
 # ----
@@ -924,7 +934,254 @@ from lib.cleanup_script import remove_markdown_blocks_and_reformat
 remove_markdown_blocks_and_reformat("notebooks/test.py", "notebooks/test_cleaned.py")
 
 
-# %%
+# %% [markdown]
+# ------
 
+# %%
+from nba_api.stats.endpoints import teamplayerdashboard
+
+def get_top_5_players_by_minutes(team_id, season='2024-25'):
+    """
+    Return a list of the player IDs of the top 5 players on a given team,
+    sorted by average minutes played in that season.
+    """
+    try:
+        # teamplayerdashboard gives per-game stats for each player on the team
+        dashboard = teamplayerdashboard.TeamPlayerDashboard(
+            team_id=team_id,
+            season=season,
+            per_mode_detailed='PerGame',
+            timeout=60
+        )
+        df_players = dashboard.get_data_frames()[1]  # [1] is the TeamPlayerDashboard table
+        df_players = df_players.sort_values('MIN', ascending=False)
+        # Return top 5 player IDs
+        return df_players['PLAYER_ID'].head(5).tolist()
+    except:
+        return []
+
+def build_team_starters_dict(unique_team_ids, season='2024-25'):
+    """
+    Build a dictionary that maps each TEAM_ID -> list of top-5 starter player IDs.
+    """
+    team_starters = {}
+    for tid in unique_team_ids:
+        top_5_list = get_top_5_players_by_minutes(tid, season)
+        team_starters[tid] = top_5_list
+    return team_starters
+
+
+# %%
+from nba_api.stats.endpoints import boxscoretraditionalv2
+
+def compute_starters_missing_for_games(df, team_starters, season='2024-25'):
+    """
+    For each unique GAME_ID in df, fetch the box score. 
+    Count how many of each team's top-5 starters did not play.
+    Return a dict with keys = (GAME_ID, TEAM_ID) and values = number_of_missing_starters.
+    """
+    # Collect unique game IDs
+    unique_game_ids = df['GAME_ID'].unique().tolist()
+    
+    # We'll store our results in a dict:  {(game_id, team_id): missing_count}
+    missing_starters_dict = {}
+    
+    for game_id in unique_game_ids:
+        try:
+            # Pull the boxscore
+            boxscore = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=game_id, timeout=60)
+            box_df = boxscore.get_data_frames()[0]
+            
+            # Filter only those who actually played (MIN > 0) 
+            # or you can check if "PLAYER_NAME" is present, etc.
+            players_who_played = box_df[box_df['MIN'] != '0:00']['PLAYER_ID'].unique().tolist()
+            
+            # Now box_df also has a 'TEAM_ID' column. We'll iterate by team to see who missed the game
+            for tid in box_df['TEAM_ID'].unique():
+                top_5 = team_starters.get(tid, [])
+                if not top_5: 
+                    # if no data, assume zero missing for safety
+                    missing_starters_dict[(game_id, tid)] = 0
+                    continue
+
+                missing_count = sum(player_id not in players_who_played for player_id in top_5)
+                missing_starters_dict[(game_id, tid)] = missing_count
+                
+        except:
+            # If something fails, fallback to zero missing
+            for tid in df[df['GAME_ID'] == game_id]['TEAM_ID'].unique():
+                missing_starters_dict[(game_id, tid)] = 0
+
+    return missing_starters_dict
+
+
+# %%
+def add_starters_missing_features(df, missing_starters_dict):
+    """
+    For each row in df, add 'TEAM_STARTERS_MISSING' and 'OPP_STARTERS_MISSING'.
+    We assume 'TEAM_ID' and 'OPPONENT_TEAM_ID' exist in df.
+    """
+    df['TEAM_STARTERS_MISSING'] = df.apply(
+        lambda row: missing_starters_dict.get((row['GAME_ID'], row['TEAM_ID']), 0),
+        axis=1
+    )
+    df['OPP_STARTERS_MISSING'] = df.apply(
+        lambda row: missing_starters_dict.get((row['GAME_ID'], row['OPPONENT_TEAM_ID']), 0),
+        axis=1
+    )
+    return df
+
+
+# %% [markdown]
+# ////////
+
+# %%
+import concurrent.futures
+from nba_api.stats.endpoints import boxscoretraditionalv2
+
+def fetch_boxscore(game_id):
+    """
+    Fetch box score data for a single GAME_ID.
+    Returns a DataFrame. If API call fails, returns empty DataFrame.
+    """
+    try:
+        boxscore = boxscoretraditionalv2.BoxScoreTraditionalV2(game_id=game_id, timeout=60)
+        return boxscore.get_data_frames()[0]
+    except:
+        return pd.DataFrame()
+
+def compute_starters_missing_for_games(df, team_starters, season='2024-25', max_workers=8):
+    """
+    For each unique GAME_ID in df, fetch the box score in parallel.
+    Then compute how many of each team's top-5 starters did not play.
+
+    Args:
+        df (pd.DataFrame): DataFrame with columns including 'GAME_ID' and 'TEAM_ID'.
+        team_starters (dict): {TEAM_ID -> [top5_player_ids]}
+        season (str): '2024-25' by default.
+        max_workers (int): Number of threads for parallel requests.
+
+    Returns:
+        dict: {(GAME_ID, TEAM_ID): missing_starters_count}
+    """
+    unique_game_ids = df['GAME_ID'].unique().tolist()
+
+    # 1) Parallel fetch all boxscores for unique_game_ids
+    boxscore_cache = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_gid = {
+            executor.submit(fetch_boxscore, gid): gid for gid in unique_game_ids
+        }
+        for future in concurrent.futures.as_completed(future_to_gid):
+            gid = future_to_gid[future]
+            try:
+                boxscore_cache[gid] = future.result()
+            except Exception as exc:
+                print(f'[Error] BoxScore fetch failed for {gid}: {exc}')
+                boxscore_cache[gid] = pd.DataFrame()  # fallback to empty
+
+    # 2) For each game, figure out how many top-5 starters didn't play
+    missing_starters_dict = {}
+    for game_id, box_df in boxscore_cache.items():
+        if box_df.empty:
+            # If we have no data, fallback to 0 for every team in that game
+            relevant_teams = df[df['GAME_ID'] == game_id]['TEAM_ID'].unique()
+            for tid in relevant_teams:
+                missing_starters_dict[(game_id, tid)] = 0
+            continue
+
+        # Filter to players who actually played (MIN != "0:00" or "0")
+        # (some boxscores have "0" or "00:00", so let's handle either).
+        box_df = box_df[~box_df['MIN'].isin(["0:00", "0"])]
+        players_who_played = box_df['PLAYER_ID'].unique().tolist()
+
+        # For each team in this boxscore
+        for tid in box_df['TEAM_ID'].unique():
+            top5 = team_starters.get(tid, [])
+            missing_count = sum(pid not in players_who_played for pid in top5)
+            missing_starters_dict[(game_id, tid)] = missing_count
+
+        # Also cover edge cases if some teams in df aren't in box_df
+        # (rare, but can happen if data is incomplete)
+        relevant_teams = df[(df['GAME_ID'] == game_id) & (~df['TEAM_ID'].isin(box_df['TEAM_ID'].unique()))]['TEAM_ID'].unique()
+        for tid in relevant_teams:
+            missing_starters_dict[(game_id, tid)] = 0
+
+    return missing_starters_dict
+
+
+# %%
+DEFAULT_FEATURE_COLS = [
+    'PIE_AVG_LAST_5', 'USG_PCT_AVG_LAST_5', 'EFF_AVG_LAST_5', 'TS_PCT_AVG_LAST_5',
+    'DEF_RATING', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'HOME_GAME', 'REST_DAYS',
+    'PTS_AVG_LAST_5', 'REB_AVG_LAST_5', 'AST_AVG_LAST_5', 'FG_PCT_AVG_LAST_5',
+    'MIN_AVG_LAST_5', 'OFF_RATING_AVG_LAST_5', 'PACE_PER40_AVG_LAST_5', 'PTS_SEASON_AVG', 
+    'OPPONENT_POSITION_ALLOWED_PTS', 'TEAM_VS_OPP_ALLOWED_PTS',
+    'PTS_VOL_LAST_5', 'USG_PCT_VOL_LAST_5', 'MIN_VOL_LAST_5',
+    'TEAM_STARTERS_MISSING', 'OPP_STARTERS_MISSING',
+]
+
+# %%
+##########################################################
+# Below is the full code snippet that puts it all together
+##########################################################
+season = '2024-25'
+opponent_stats = get_opponent_stats(season)
+team_map = get_team_abbreviation_id_mapping()
+
+all_player_data = pd.DataFrame()
+for p_name in player_names:
+    p_id = get_player_id(p_name)
+    if not p_id:
+        continue
+    p_gamelog = get_player_game_logs(p_id, season)
+    adv_stats = get_player_advanced_stats(p_id, season)
+    if p_gamelog.empty or adv_stats.empty:
+        continue
+    
+    p_gamelog['PLAYER_NAME'] = p_name
+    merged_df = feature_engineering(p_gamelog, adv_stats, opponent_stats, team_map)
+    all_player_data = pd.concat([all_player_data, merged_df], ignore_index=True)
+
+# 3) Position & Team aggregator
+all_player_data = add_opponent_position_allowed_pts(all_player_data)
+all_player_data = add_team_vs_opponent_allowed_pts(all_player_data)
+
+# %%
+# 3) Build the dictionary of top-5 starters for each team
+unique_team_ids = all_player_data['TEAM_ID'].unique().tolist()
+team_starters_dict = build_team_starters_dict(unique_team_ids, season='2024-25')
+
+# 4) Compute how many starters are missing for each game/team
+missing_starters_dict = compute_starters_missing_for_games(
+    all_player_data, team_starters_dict, season='2024-25'
+)
+
+# 5) Add the new columns
+all_player_data = add_starters_missing_features(all_player_data, missing_starters_dict)
+
+
+# %%
+all_player_data
+
+# %%
+# 6) Now do train/test split & modeling as usual
+X_train_scaled, X_test_scaled, y_train, y_test, X_test_original = prepare_data(all_player_data)
+best_model = train_and_evaluate_models(X_train_scaled, y_train, X_test_scaled, y_test)
+eval_df = evaluate_model(best_model, X_test_scaled, y_test, X_test_original)
+
+# Your further steps, such as predictions for upcoming games, residual analysis, etc.
+
+# %% [markdown]
+# 
+
+# %%
+all_player_data.to_csv('data/all_player_data.csv', index=False)
+
+# %% [markdown]
+# -----
+
+# %% [markdown]
+# 
 
 
