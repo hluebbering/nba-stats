@@ -33,7 +33,8 @@ def parse_minutes(min_str):
 
 def add_rolling_features(df, group_col='PLAYER_ID'):
     # Rolling averages including advanced stats
-    roll_cols = ['PTS', 'REB', 'AST', 'EFF', 'TS_PCT', 'MIN', 'USG_PCT', 'FG_PCT', 'OFF_RATING', 'PACE_PER40']
+    roll_cols = ['PTS','REB','AST','EFF','TS_PCT','MIN','USG_PCT','FG_PCT','OFF_RATING','PACE_PER40','PIE']
+
     for col in roll_cols:
         df[f'{col}_AVG_LAST_5'] = (
             df.groupby(group_col)[col]
@@ -49,7 +50,7 @@ def add_rolling_features(df, group_col='PLAYER_ID'):
     return df
 
 
-def feature_engineering_pipeline(df, team_map=None, opp_df=None):
+def feature_engineering_pipeline(df, team_map=None, opp_df=None, opp_last10_df=None):
     # 1. Rename TEAM_ID if merged with suffix
     if 'TEAM_ID_x' in df:
         df.rename(columns={'TEAM_ID_x': 'TEAM_ID'}, inplace=True)
@@ -82,8 +83,37 @@ def feature_engineering_pipeline(df, team_map=None, opp_df=None):
             how='left',
             suffixes=('', '_opp')
         )
-        for col in ['DEF_RATING', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE']:
-            df[col].fillna(df[col].mean(), inplace=True)
+        # option A: assign back
+        for col in ['DEF_RATING','OPP_PTS_OFF_TOV','OPP_PTS_2ND_CHANCE']:
+            df[col] = df[col].fillna(df[col].mean())
+            
+    
+    # 5-b. Merge LAST-10 opponent defense
+    if opp_last10_df is not None and 'OPPONENT_TEAM_ID' in df.columns:
+        df = df.merge(
+            opp_last10_df,
+            left_on='OPPONENT_TEAM_ID',
+            right_on='TEAM_ID',
+            how='left',
+            suffixes=('', '_L10')
+        )
+
+        # Drop duplicate TEAM_ID from the right-side merge
+        if 'TEAM_ID_L10' in df.columns:
+            df.drop(columns=['TEAM_ID_L10'], inplace=True)
+
+        # Fill NaNs in the new last-10 columns
+        fill_cols = [
+            'DEF_RATING_LAST10',
+            'OPP_PTS_OFF_TOV_LAST10',
+            'OPP_PTS_2ND_CHANCE_LAST10'
+        ]
+        df[fill_cols] = df[fill_cols].fillna(df[fill_cols].mean())
+
+# -------------------------------------------------
+
+
+
 
     # 6. Sort and compute rest days
     df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'], errors='coerce')

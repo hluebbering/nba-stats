@@ -4,6 +4,8 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from nba_api.stats.endpoints import leaguegamelog, boxscoreadvancedv2
 from nba_api.stats.static import players
+from nba_api.stats.endpoints import leaguedashteamstats
+from nba_api.stats.endpoints import leaguedashteamstats
 
 # ===============================
 # Player Game Log (Bulk Fetch)
@@ -124,3 +126,37 @@ def get_player_advanced_stats_parallel(player_id, game_ids):
             if not result.empty:
                 results.append(result)
     return pd.concat(results, ignore_index=True) if results else pd.DataFrame()
+
+
+
+
+def get_opponent_stats(season='2024-25', timeout=120):
+    """
+    Fetch per-team defensive stats (DEF_RATING, OPP_PTS_OFF_TOV, OPP_PTS_2ND_CHANCE).
+    """
+    df = leaguedashteamstats.LeagueDashTeamStats(
+        season=season,
+        measure_type_detailed_defense='Defense',
+        per_mode_detailed='PerGame',
+        timeout=timeout
+    ).get_data_frames()[0]
+    return df[['TEAM_ID', 'DEF_RATING', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE']]
+
+
+def get_opponent_stats_last10(season='2024-25', timeout=120):
+    df = leaguedashteamstats.LeagueDashTeamStats(
+        season=season,
+        measure_type_detailed_defense='Defense',
+        per_mode_detailed='PerGame',
+        last_n_games=10,
+        timeout=timeout
+    ).get_data_frames()[0]
+
+    # keep + rename
+    df = df[['TEAM_ID', 'DEF_RATING', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE']]
+    df.rename(columns={
+        'DEF_RATING': 'DEF_RATING_LAST10',
+        'OPP_PTS_OFF_TOV': 'OPP_PTS_OFF_TOV_LAST10',
+        'OPP_PTS_2ND_CHANCE': 'OPP_PTS_2ND_CHANCE_LAST10'
+    }, inplace=True)
+    return df

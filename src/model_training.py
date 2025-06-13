@@ -9,14 +9,7 @@ from sklearn.linear_model import Ridge, BayesianRidge
 from catboost import CatBoostRegressor
 import pandas as pd
 
-DEFAULT_FEATURE_COLS = [
-    'PIE_AVG_LAST_5', 'USG_PCT_AVG_LAST_5', 'EFF_AVG_LAST_5', 'TS_PCT_AVG_LAST_5',
-    'DEF_RATING', 'OPP_PTS_OFF_TOV', 'OPP_PTS_2ND_CHANCE', 'HOME_GAME', 'REST_DAYS',
-    'PTS_AVG_LAST_5', 'REB_AVG_LAST_5', 'AST_AVG_LAST_5', 'FG_PCT_AVG_LAST_5', 'MIN_AVG_LAST_5',
-    'OFF_RATING_AVG_LAST_5', 'PACE_PER40_AVG_LAST_5', 'PTS_SEASON_AVG',
-    'OPPONENT_POSITION_ALLOWED_PTS', 'TEAM_VS_OPP_ALLOWED_PTS',
-    'PTS_VOL_LAST_5', 'USG_PCT_VOL_LAST_5', 'MIN_VOL_LAST_5'
-]
+
 
 
 DEFAULT_FEATURE_COLS = [
@@ -27,29 +20,50 @@ DEFAULT_FEATURE_COLS = [
     'OPPONENT_POSITION_ALLOWED_PTS', 'TEAM_VS_OPP_ALLOWED_PTS', 'PTS_VOL_LAST_5',
     'USG_PCT_VOL_LAST_5', 'MIN_VOL_LAST_5'
 ]
+DEFAULT_FEATURE_COLS += [
+    'DEF_RATING_LAST10',
+    'OPP_PTS_OFF_TOV_LAST10',
+    'OPP_PTS_2ND_CHANCE_LAST10'
+]
+
+
 
 
 
 
 def prepare_data(df, feature_cols=DEFAULT_FEATURE_COLS):
-    # Keep only columns that exist in df
-    existing_features = [col for col in feature_cols if col in df.columns]
-    missing_features = set(feature_cols) - set(existing_features)
-    if missing_features:
-        print(f"Warning: Missing features skipped: {missing_features}")
+    # 1. Keep only the features that exist
+    existing = [c for c in feature_cols if c in df.columns]
+    missing = set(feature_cols) - set(existing)
+    if missing:
+        print(f"⚠️  Missing columns (will be dropped): {missing}")
 
-    df = df.dropna(subset=existing_features)
-    X = df[existing_features].copy()
+    # 2. Subset and fill NaNs
+    X = df[existing].copy()
+    # fill numeric NaNs with column median
+    X = X.fillna(X.median())
+
     y = df['PTS']
+    n = len(df)
+    print(f"🔢  Preparing to split {n} samples")
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+    # 3. Need at least 2 samples to split
+    if n < 2:
+        raise ValueError(f"Not enough data ({n} rows) to train/test split")
+
+    # 4. Do train/test split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, shuffle=False
+    )
+
+    # 5. Scale
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
+    X_test_scaled  = scaler.transform(X_test)
 
-    joblib.dump(scaler, 'lib/scaler.pkl')
+    # 6. Save and return
+    joblib.dump(scaler, 'src/scaler.pkl')
     return X_train_scaled, X_test_scaled, y_train, y_test, X_test.reset_index(drop=True)
-
 
 
 
