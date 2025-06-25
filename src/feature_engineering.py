@@ -109,6 +109,8 @@ def feature_engineering_pipeline(df, team_map=None, opp_df=None, opp_last10_df=N
             'OPP_PTS_2ND_CHANCE_LAST10'
         ]
         df[fill_cols] = df[fill_cols].fillna(df[fill_cols].mean())
+        df[fill_cols] = df[fill_cols].fillna(0)   # second pass
+
 
 # -------------------------------------------------
 

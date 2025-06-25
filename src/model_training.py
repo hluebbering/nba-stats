@@ -29,6 +29,13 @@ DEFAULT_FEATURE_COLS += [
 
 
 
+def chronological_player_split(X, y):
+    # X is a DataFrame that must contain PLAYER_ID
+    test_idx  = X.groupby('PLAYER_ID').tail(5).index
+    train_idx = X.index.difference(test_idx)
+    return (X.loc[train_idx], X.loc[test_idx],
+            y.loc[train_idx], y.loc[test_idx])
+
 
 
 def prepare_data(df, feature_cols=DEFAULT_FEATURE_COLS):
@@ -55,6 +62,8 @@ def prepare_data(df, feature_cols=DEFAULT_FEATURE_COLS):
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, shuffle=False
     )
+    
+    X_train, X_test, y_train, y_test = chronological_player_split(X, y)
 
     # 5. Scale
     scaler = StandardScaler()
@@ -64,6 +73,31 @@ def prepare_data(df, feature_cols=DEFAULT_FEATURE_COLS):
     # 6. Save and return
     joblib.dump(scaler, 'src/scaler.pkl')
     return X_train_scaled, X_test_scaled, y_train, y_test, X_test.reset_index(drop=True)
+
+
+
+
+def prepare_data(df, feature_cols=DEFAULT_FEATURE_COLS):
+    cols = feature_cols + ['PLAYER_ID']   # keep it temporarily
+    existing = [c for c in cols if c in df.columns]
+    X = df[existing].fillna(df[existing].median())
+    y = df['PTS']
+
+    # chronological split
+    X_train, X_test, y_train, y_test = chronological_player_split(X, y)
+
+    # drop PLAYER_ID before scaling
+    pid_train = X_train.pop('PLAYER_ID')
+    pid_test  = X_test.pop('PLAYER_ID')
+
+    scaler = StandardScaler()
+    X_train_s = scaler.fit_transform(X_train)
+    X_test_s  = scaler.transform(X_test)
+
+    joblib.dump(scaler, 'src/scaler.pkl')
+    return X_train_s, X_test_s, y_train, y_test, X_test.reset_index(drop=True)
+
+
 
 
 
@@ -94,7 +128,7 @@ def train_models(X_train, y_train, X_test, y_test):
             best_model = model
 
     print(f"\nBest model: {type(best_model).__name__} with RMSE: {best_rmse:.2f}")
-    joblib.dump(best_model, 'lib/player_points_model.pkl')
+    joblib.dump(best_model, 'src/player_points_model.pkl')
     return best_model
 
 def evaluate_model(model, X_test_scaled, y_test, X_test_original):
